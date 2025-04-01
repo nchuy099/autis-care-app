@@ -3,6 +3,7 @@ import { View, Text, FlatList, TouchableOpacity, Image, StyleSheet } from "react
 import Layout from "~/components/layouts/Layout";
 import * as Speech from 'expo-speech';
 
+//comment
 interface ImageItem {
     id: string;
     source: any;
