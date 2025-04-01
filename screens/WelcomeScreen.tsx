@@ -20,7 +20,7 @@ const WelcomeScreen = () => {
 
             {/* Start Button */}
             <View className="flex-1 justify-start items-center">
-                <StartButton title="Start" onPress={() => navigation.navigate('HomeScreen')} />
+                <StartButton title="Start" onPress={() => navigation.navigate('HomeScreen')} /> 
             </View>
 
         </Layout>
