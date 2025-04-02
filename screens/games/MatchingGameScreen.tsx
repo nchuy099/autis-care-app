@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { View, ImageBackground, Text } from 'react-native';
+import { View, ImageBackground } from 'react-native';
 import Layout from 'components/layouts/Layout';
 import MatchingCard from 'components/games/matching/MatchingCard';
 import CongratsModal from 'components/games/matching/CongratsModal';
@@ -7,12 +7,12 @@ import { GameCard, CardGroup } from 'types/game';
 
 // Giả lập dữ liệu thẻ
 const cardGroups: CardGroup[] = [
-    { id: '1', image: 'Con chim', text: 'Con chim' },
-    { id: '2', image: 'Con mèo', text: 'Con mèo' },
-    { id: '3', image: 'Con cua', text: 'Con cua' },
-    { id: '4', image: 'Con gà', text: 'Con gà' },
-    { id: '5', image: 'Con bò', text: 'Con bò' },
-    { id: '6', image: 'Con cừu', text: 'Con cừu' },
+    { id: '1', image: require('assets/GameAssets/birdcard.png'), text: 'Con chim' },
+    { id: '2', image: require('assets/GameAssets/catcard.png'), text: 'Con mèo' },
+    { id: '3', image: require('assets/GameAssets/crabcard.png'), text: 'Con cua' },
+    { id: '4', image: require('assets/GameAssets/chickencard.png'), text: 'Con gà' },
+    { id: '5', image: require('assets/GameAssets/cowcard.png'), text: 'Con bò' },
+    { id: '6', image: require('assets/GameAssets/duckcard.png'), text: 'Con vịt' },
 ];
 
 const MatchingGameScreen = () => {
@@ -89,12 +89,16 @@ const MatchingGameScreen = () => {
     }, []);
 
     return (
-        <Layout>
-            <View className="flex-1 bg-blue-50">
-                <View className="flex-1 p-4">
-                    <View className="flex-1 justify-center">
-                        <View className="flex-row flex-wrap justify-center gap-2">
-                            {cards.map(card => (
+        <ImageBackground 
+            source={require('assets/GameAssets/background_animal.jpg')} 
+            className="flex-1"
+            resizeMode="cover"
+        >
+            <View className="flex-1 p-4 mt-20">
+                <View className="flex-1 justify-center">
+                    <View className="flex-row flex-wrap justify-center gap-4">
+                        {cards.map(card => (
+                            !card.isMatched && (
                                 <View key={card.id} className="w-[30%]">
                                     <MatchingCard
                                         card={card}
@@ -103,16 +107,16 @@ const MatchingGameScreen = () => {
                                         isError={errorPair.includes(card.id)}
                                     />
                                 </View>
-                            ))}
-                        </View>
+                            )
+                        ))}
                     </View>
                 </View>
-
-                {isCompleted && (
-                    <CongratsModal onPlayAgain={initializeGame} />
-                )}
             </View>
-        </Layout>
+
+            {isCompleted && (
+                <CongratsModal onPlayAgain={initializeGame} />
+            )}
+        </ImageBackground>
     );
 };
 

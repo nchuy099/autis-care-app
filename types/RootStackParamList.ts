@@ -2,7 +2,6 @@ type RootStackParamList = {
     WelcomeScreen: undefined;
     HomeScreen: undefined;
     TalkScreen: undefined;
-    PlayScreen: undefined;
     ScheduleScreen: undefined;
     // Game Screens
     GameMenuScreen: undefined;

@@ -1,9 +1,11 @@
+import { ImageSourcePropType } from 'react-native';
+
 export type CardType = 'image' | 'text';
 
 export interface GameCard {
     id: string;
     type: CardType;
-    value: string;
+    value: string | ImageSourcePropType;
     groupId: string;
     isFlipped: boolean;
     isMatched: boolean;
@@ -11,7 +13,7 @@ export interface GameCard {
 
 export interface CardGroup {
     id: string;
-    image: string;
+    image: ImageSourcePropType;
     text: string;
 }
 

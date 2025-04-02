@@ -26,7 +26,7 @@ const HomeScreen = () => {
                 />
                 <FeatureCard
                     title="Play"
-                    onPress={() => navigation.navigate("PlayScreen")}
+                    onPress={() => navigation.navigate("GameMenuScreen")}
                     icon="gamepad-variant"
                 />
             </View>
