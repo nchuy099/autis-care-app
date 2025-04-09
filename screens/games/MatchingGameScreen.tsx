@@ -98,16 +98,16 @@ const MatchingGameScreen = () => {
                 <View className="flex-1 justify-center">
                     <View className="flex-row flex-wrap justify-center gap-4">
                         {cards.map(card => (
-                            !card.isMatched && (
-                                <View key={card.id} className="w-[30%]">
+                            <View key={card.id} className="w-[30%]">
+                                {!card.isMatched && (
                                     <MatchingCard
                                         card={card}
                                         onSelect={handleCardSelect}
                                         isSelected={selectedCard?.id === card.id}
                                         isError={errorPair.includes(card.id)}
                                     />
-                                </View>
-                            )
+                                )}
+                            </View>
                         ))}
                     </View>
                 </View>

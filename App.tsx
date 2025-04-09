@@ -8,6 +8,7 @@ import TalkScreen from 'screens/TalkScreen';
 import WelcomeScreen from 'screens/WelcomeScreen';
 import GameMenuScreen from 'screens/games/GameMenuScreen';
 import MatchingGameScreen from 'screens/games/MatchingGameScreen';
+import MemoryGameScreen from 'screens/games/MemoryGameScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -21,6 +22,7 @@ const App = () => {
         <Stack.Screen name="ScheduleScreen" component={ScheduleScreen} />
         <Stack.Screen name="GameMenuScreen" component={GameMenuScreen} />
         <Stack.Screen name="MatchingGameScreen" component={MatchingGameScreen} />
+        <Stack.Screen name="MemoryGameScreen" component={MemoryGameScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
