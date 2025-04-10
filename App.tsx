@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native';
 import HomeScreen from 'screens/HomeScreen';
 import PlayScreen from 'screens/PlayScreen';
 import ScheduleScreen from 'screens/ScheduleScreen';
-import TalkScreen from 'screens/TalkScreen';
+import TalkScreen from 'screens/talk/TalkScreen';
 import WelcomeScreen from 'screens/WelcomeScreen';
 import GameMenuScreen from 'screens/games/GameMenuScreen';
 import MatchingGameScreen from 'screens/games/MatchingGameScreen';
