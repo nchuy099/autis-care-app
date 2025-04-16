@@ -1,27 +1,27 @@
-export interface WordItem {
+export interface CardItem {
     id: string;
     label: string;
-    type: 'core' | 'back';
-    icon?: string;
+    type: 'core' | 'back' | 'category';
+    image?: any;
     isCategory?: boolean;
-    subWords?: WordItem[];
+    subWords?: CardItem[];
 }
 
 export interface OutputBarProps {
-    selectedWords: string[];
+    selectedWords: CardItem[];
     onSpeak: () => void;
     onRemoveLast: () => void;
     onRemoveAll: () => void;
 }
 
-export interface WordItemProps {
-    item: WordItem;
-    onPress: (word: WordItem) => void;
+export interface CardItemProps {
+    item: CardItem;
+    onPress: (word: CardItem) => void;
     width: number;
 }
 
-export interface WordGridProps {
-    data: WordItem[];
-    currentCategory: WordItem | null;
-    onWordPress: (word: WordItem) => void;
-} 
+export interface CardGridProps {
+    data: CardItem[];
+    currentCategory: CardItem | null;
+    onWordPress: (word: CardItem) => void;
+}

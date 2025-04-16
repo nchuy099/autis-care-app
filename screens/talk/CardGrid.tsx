@@ -1,6 +1,6 @@
 import { View, FlatList, StyleSheet, useWindowDimensions } from "react-native";
-import { WordGridProps } from "./types";
-import WordItem from "./WordItem";
+import { CardGridProps } from "./types";
+import CardItem from "./CardItem";
 
 const styles = StyleSheet.create({
     gridContainer: {
@@ -8,10 +8,11 @@ const styles = StyleSheet.create({
     },
 });
 
-const WordGrid = ({ data, currentCategory, onWordPress }: WordGridProps) => {
+const WordGrid = ({ data, currentCategory, onWordPress }: CardGridProps) => {
     const { width } = useWindowDimensions();
-    const numColumns = Math.max(2, Math.min(Math.floor(width / 100), 4));
+    const numColumns = Math.max(3, Math.min(Math.floor(width / 100), 6));
     const itemWidth = 100 / numColumns;
+
 
     const getSortedData = () => {
         if (!currentCategory) return data;
@@ -28,7 +29,7 @@ const WordGrid = ({ data, currentCategory, onWordPress }: WordGridProps) => {
                 key={`grid-${numColumns}`}
                 data={getSortedData()}
                 renderItem={({ item }) => (
-                    <WordItem
+                    <CardItem
                         item={item}
                         onPress={onWordPress}
                         width={itemWidth}

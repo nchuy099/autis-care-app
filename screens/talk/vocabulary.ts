@@ -1,6 +1,30 @@
-import { WordItem } from "./types";
+import { CardItem } from "./types";
+import { MaterialIcons } from "@expo/vector-icons";
 
-export const vocabularyData: WordItem[] = [
+// Import images from assets
+// Food category icons
+import foodIcon from "../../assets/food/pizza.png";
+import riceIcon from "../../assets/food/pasta.png";
+import cakeIcon from "../../assets/food/candy.png";
+import noodleIcon from "../../assets/food/pasta.png";
+import fruitIcon from "../../assets/food/apple.png";
+import waterIcon from "../../assets/food/water.png";
+
+// Toys category icons
+import toysIcon from "../../assets/activities/play.png";
+import dollIcon from "../../assets/things/group.png";
+import carIcon from "../../assets/things/car.png";
+import bookIcon from "../../assets/activities/read.png";
+import ballIcon from "../../assets/things/ball.png";
+
+// Animals category icons
+import petsIcon from "../../assets/things/home.png";
+import dogIcon from "../../assets/things/home.png";
+import catIcon from "../../assets/things/home.png";
+import chickenIcon from "../../assets/food/chicken.png";
+import duckIcon from "../../assets/food/chicken.png";
+
+export const vocabularyData: CardItem[] = [
     // Core words
     { id: '1', label: 'Tôi', type: 'core' },
     { id: '2', label: 'Bạn', type: 'core' },
@@ -15,44 +39,44 @@ export const vocabularyData: WordItem[] = [
     {
         id: '10',
         label: 'Đồ ăn',
-        icon: 'restaurant',
-        type: 'core',
+        image: foodIcon,
+        type: 'category',
         isCategory: true,
         subWords: [
-            { id: '10.1', label: 'Cơm', type: 'core' },
-            { id: '10.2', label: 'Bánh', type: 'core' },
-            { id: '10.3', label: 'Mì', type: 'core' },
-            { id: '10.4', label: 'Trái cây', type: 'core' },
-            { id: '10.5', label: 'Nước', type: 'core' },
-            { id: '10.6', label: 'Quay lại', type: 'back' }
+            { id: '10.1', label: 'Cơm', image: riceIcon, type: 'core' },
+            { id: '10.2', label: 'Bánh', image: cakeIcon, type: 'core' },
+            { id: '10.3', label: 'Mì', image: noodleIcon, type: 'core' },
+            { id: '10.4', label: 'Trái cây', image: fruitIcon, type: 'core' },
+            { id: '10.5', label: 'Nước', image: waterIcon, type: 'core' },
+            { id: '10.6', label: 'Quay lại', type: 'back', image: MaterialIcons.name === 'arrow-back' ? MaterialIcons : undefined }
         ]
     },
     {
         id: '11',
         label: 'Đồ chơi',
-        icon: 'toys',
-        type: 'core',
+        image: toysIcon,
+        type: 'category',
         isCategory: true,
         subWords: [
-            { id: '11.1', label: 'Búp bê', type: 'core' },
-            { id: '11.2', label: 'Xe', type: 'core' },
-            { id: '11.3', label: 'Sách', type: 'core' },
-            { id: '11.4', label: 'Bóng', type: 'core' },
-            { id: '11.5', label: 'Quay lại', type: 'back' }
+            { id: '11.1', label: 'Búp bê', image: dollIcon, type: 'core' },
+            { id: '11.2', label: 'Xe', image: carIcon, type: 'core' },
+            { id: '11.3', label: 'Sách', image: bookIcon, type: 'core' },
+            { id: '11.4', label: 'Bóng', image: ballIcon, type: 'core' },
+            { id: '11.5', label: 'Quay lại', type: 'back', image: MaterialIcons.name === 'arrow-back' ? MaterialIcons : undefined }
         ]
     },
     {
         id: '12',
         label: 'Động vật',
-        icon: 'pets',
-        type: 'core',
+        image: petsIcon,
+        type: 'category',
         isCategory: true,
         subWords: [
-            { id: '12.1', label: 'Chó', type: 'core' },
-            { id: '12.2', label: 'Mèo', type: 'core' },
-            { id: '12.3', label: 'Gà', type: 'core' },
-            { id: '12.4', label: 'Vịt', type: 'core' },
-            { id: '12.5', label: 'Quay lại', type: 'back' }
+            { id: '12.1', label: 'Chó', image: dogIcon, type: 'core' },
+            { id: '12.2', label: 'Mèo', image: catIcon, type: 'core' },
+            { id: '12.3', label: 'Gà', image: chickenIcon, type: 'core' },
+            { id: '12.4', label: 'Vịt', image: duckIcon, type: 'core' },
+            { id: '12.5', label: 'Quay lại', type: 'back', image: MaterialIcons.name === 'arrow-back' ? MaterialIcons : undefined }
         ]
     }
-]; 
+];

@@ -3,15 +3,15 @@ import { View } from "react-native";
 import * as Speech from 'expo-speech';
 import Layout from "../../components/layouts/Layout";
 import OutputBar from "./OutputBar";
-import WordGrid from "./WordGrid";
+import WordGrid from "./CardGrid";
 import { vocabularyData } from "./vocabulary";
-import { WordItem } from "./types";
+import { CardItem } from "./types";
 
 const TalkScreen = () => {
-    const [selectedWords, setSelectedWords] = useState<string[]>([]);
-    const [currentCategory, setCurrentCategory] = useState<WordItem | null>(null);
+    const [selectedWords, setSelectedWords] = useState<CardItem[]>([]);
+    const [currentCategory, setCurrentCategory] = useState<CardItem | null>(null);
 
-    const handleWordPress = (word: WordItem) => {
+    const handleWordPress = (word: CardItem) => {
         if (word.type === 'back') {
             setCurrentCategory(null);
             return;
@@ -19,7 +19,7 @@ const TalkScreen = () => {
         if (word.isCategory) {
             setCurrentCategory(word);
         } else {
-            setSelectedWords(prev => [...prev, word.label]);
+            setSelectedWords(prev => [...prev, word]);
         }
     };
 
@@ -33,7 +33,7 @@ const TalkScreen = () => {
 
     const handleSpeak = () => {
         if (selectedWords.length > 0) {
-            Speech.speak(selectedWords.join(' '));
+            Speech.speak(selectedWords.map(word => word.label).join(' '));
         }
     };
 

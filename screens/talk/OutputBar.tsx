@@ -1,4 +1,5 @@
-import { View, Text, FlatList, TouchableOpacity } from "react-native";
+import { View, Text, FlatList, TouchableOpacity, Image } from "react-native";
+import { Feather, FontAwesome6, MaterialIcons } from '@expo/vector-icons';
 import { OutputBarProps } from "./types";
 
 const OutputBar = ({ selectedWords, onSpeak, onRemoveLast, onRemoveAll }: OutputBarProps) => (
@@ -12,26 +13,35 @@ const OutputBar = ({ selectedWords, onSpeak, onRemoveLast, onRemoveAll }: Output
                     <FlatList
                         data={selectedWords}
                         renderItem={({ item }) => (
-                            <Text className="text-lg mx-2">{item}</Text>
+                            <View className="items-center mx-2">
+                                {item.image && (
+                                    <Image 
+                                        source={item.image} 
+                                        style={{ width: 40, height: 40 }} 
+                                        resizeMode="contain" 
+                                    />
+                                )}
+                                <Text className="text-sm mt-1">{item.label}</Text>
+                            </View>
                         )}
                         keyExtractor={(_, index) => index.toString()}
                         horizontal
                         showsHorizontalScrollIndicator={false}
-                        className="px-4"
+                        className="px-4 pt-4"
                     />
                 </TouchableOpacity>
-                <View className="flex-col mr-4 gap-2">
+                <View className="flex-col mr-4 gap-1">
                     <TouchableOpacity
-                        className="bg-red-500 px-4 py-2 rounded-lg"
+                        className="bg-orange-400 px-3 py-2 rounded-lg flex-row items-center justify-end gap-1"
                         onPress={onRemoveLast}
                     >
-                        <Text className="text-white font-bold">Xóa</Text>
+                        <FontAwesome6 name="delete-left" size={24} color="white" />
                     </TouchableOpacity>
                     <TouchableOpacity
-                        className="bg-red-600 px-4 py-2 rounded-lg"
+                        className="bg-orange-500 px-3 py-2 rounded-lg flex-row items-center justify-end gap-1"
                         onPress={onRemoveAll}
                     >
-                        <Text className="text-white font-bold">Xóa tất cả</Text>
+                        <MaterialIcons name="delete-sweep" size={24} color="white" />
                     </TouchableOpacity>
                 </View>
             </View>
@@ -43,4 +53,4 @@ const OutputBar = ({ selectedWords, onSpeak, onRemoveLast, onRemoveAll }: Output
     </View>
 );
 
-export default OutputBar; 
+export default OutputBar;
