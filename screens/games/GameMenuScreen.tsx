@@ -73,6 +73,25 @@ const GameMenuScreen = () => {
                             </Text>
                         </View>
                     </TouchableOpacity>
+
+                    <TouchableOpacity 
+                        className="bg-white rounded-2xl p-6 mb-4 flex-row items-center shadow-lg"
+                        onPress={() => navigation.navigate('PuzzleGameScreen')}
+                    >
+                        <Image 
+                            source={require('assets/GameAssets/puzzle_game_logo.png')}
+                            className="w-24 h-24"
+                            resizeMode="contain"
+                        />
+                        <View className="ml-6 flex-1">
+                            <Text className="text-2xl font-bold text-blue-600 mb-2">
+                                Xếp Hình
+                            </Text>
+                            <Text className="text-gray-600 text-lg">
+                                Di chuyển các mảnh ghép để hoàn thành bức tranh
+                            </Text>
+                        </View>
+                    </TouchableOpacity>
                 </ScrollView>
             </View>
         </ImageBackground>

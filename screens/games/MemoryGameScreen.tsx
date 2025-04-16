@@ -102,7 +102,7 @@ const MemoryGameScreen = () => {
 
     return (
         <ImageBackground 
-            source={require('assets/GameAssets/background_animal.jpg')} 
+            source={require('assets/GameAssets/backgroud2.jpg')} 
             className="flex-1"
             resizeMode="cover"
         >
