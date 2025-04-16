@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
-import { View, ImageBackground } from 'react-native';
+import { View, ImageBackground, Text, TouchableOpacity } from 'react-native';
 import MemoryCard from 'components/games/memory/MemoryCard';
 import CongratsModal from 'components/games/matching/CongratsModal';
 import { GameCard } from 'types/game';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useNavigation } from '@react-navigation/native';
 
 // Giả lập dữ liệu thẻ
 const cardGroups = [
@@ -15,11 +17,13 @@ const cardGroups = [
 ];
 
 const MemoryGameScreen = () => {
+    const navigation = useNavigation();
     const [cards, setCards] = useState<GameCard[]>([]);
     const [selectedCards, setSelectedCards] = useState<GameCard[]>([]);
     const [errorPair, setErrorPair] = useState<string[]>([]);
     const [isCompleted, setIsCompleted] = useState(false);
     const [isFlipping, setIsFlipping] = useState(false);
+    const [moves, setMoves] = useState(0);
 
     const initializeGame = () => {
         // Tạo mảng thẻ từ các nhóm đã chọn
@@ -47,6 +51,8 @@ const MemoryGameScreen = () => {
         setSelectedCards([]);
         setErrorPair([]);
         setIsCompleted(false);
+        setIsFlipping(false);
+        setMoves(0);
     };
 
     const handleCardSelect = (card: GameCard) => {
@@ -54,6 +60,7 @@ const MemoryGameScreen = () => {
 
         const newSelectedCards = [...selectedCards, card];
         setSelectedCards(newSelectedCards);
+        setMoves(prev => prev + 1);
 
         // Lật thẻ được chọn
         const updatedCards = cards.map(c =>
@@ -102,11 +109,32 @@ const MemoryGameScreen = () => {
 
     return (
         <ImageBackground 
-            source={require('assets/GameAssets/backgroud2.jpg')} 
+            source={require('assets/GameAssets/background_animal.jpg')} 
             className="flex-1"
             resizeMode="cover"
         >
-            <View className="flex-1 p-4 mt-20">
+            <View className="flex-1 p-4">
+                {/* Header */}
+                <View className="flex-row justify-between items-center mt-12 mb-8">
+                    <TouchableOpacity 
+                        onPress={() => navigation.goBack()}
+                        className="bg-white p-2 rounded-full shadow-md"
+                    >
+                        <Icon name="arrow-left" size={32} color="#3B82F6" />
+                    </TouchableOpacity>
+                    <View className="flex-1 items-center">
+                        <Text className="text-2xl font-bold text-white">
+                            Số bước: {moves}
+                        </Text>
+                    </View>
+                    <TouchableOpacity 
+                        onPress={initializeGame}
+                        className="bg-white p-2 rounded-full shadow-md"
+                    >
+                        <Icon name="refresh" size={32} color="#3B82F6" />
+                    </TouchableOpacity>
+                </View>
+
                 <View className="flex-1 justify-center">
                     <View className="flex-row flex-wrap justify-center gap-4">
                         {cards.map(card => (
@@ -123,11 +151,14 @@ const MemoryGameScreen = () => {
                         ))}
                     </View>
                 </View>
-            </View>
 
-            {isCompleted && (
-                <CongratsModal onPlayAgain={initializeGame} />
-            )}
+                {isCompleted && (
+                    <CongratsModal 
+                        onPlayAgain={initializeGame}
+                        moves={moves}
+                    />
+                )}
+            </View>
         </ImageBackground>
     );
 };

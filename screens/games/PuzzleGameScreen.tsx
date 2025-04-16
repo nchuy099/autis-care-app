@@ -198,7 +198,10 @@ const PuzzleGameScreen = () => {
 
                 {/* Congratulations Modal */}
                 {puzzleState.isCompleted && (
-                    <CongratsModal onPlayAgain={initializePuzzle} />
+                    <CongratsModal 
+                        onPlayAgain={initializePuzzle}
+                        moves={puzzleState.moves}
+                    />
                 )}
             </View>
         </ImageBackground>
