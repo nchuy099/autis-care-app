@@ -39,7 +39,7 @@ const TalkScreen = () => {
 
     return (
         <Layout>
-            <View className="flex-1 bg-white">
+            <View className="flex-1 bg-white p-3">
                 <OutputBar
                     selectedWords={selectedWords}
                     onSpeak={handleSpeak}

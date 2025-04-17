@@ -7,7 +7,7 @@ interface LayoutProps extends ViewProps {
 
 const Layout = ({ children, ...props }: LayoutProps) => {
     return (
-        <SafeAreaView className='flex-1' style={{ paddingTop: Platform.OS === 'android' ? 25 : 0 }} {...props}>
+        <SafeAreaView className='flex-1 pt-5' {...props}>
             {children}
         </SafeAreaView>
     );
