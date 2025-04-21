@@ -21,6 +21,44 @@ const ICONS: IconName[] = [
     "bed", "game-controller", "fitness", "musical-notes", "brush"
 ];
 
+const DEFAULT_ACTIVITIES: Activity[] = [
+    {
+        id: "1",
+        title: "Wake Up",
+        time: "06:00",
+        icon: "sunny",
+        completed: false,
+    },
+    {
+        id: "2",
+        title: "Breakfast",
+        time: "06:30",
+        icon: "restaurant",
+        completed: false,
+    },
+    {
+        id: "3",
+        title: "Lunch",
+        time: "12:00",
+        icon: "restaurant",
+        completed: false,
+    },
+    {
+        id: "4",
+        title: "Dinner",
+        time: "19:00",
+        icon: "restaurant",
+        completed: false,
+    },
+    {
+        id: "5",
+        title: "Go to Bed",
+        time: "22:00",
+        icon: "bed",
+        completed: false,
+    }
+];
+
 const HOURS = Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0'));
 const MINUTES = Array.from({ length: 4 }, (_, i) => (i * 15).toString().padStart(2, '0'));
 
@@ -50,7 +88,7 @@ const ScheduleScreen = () => {
     const [selectedMinute, setSelectedMinute] = useState("00");
     const [showTimeSelector, setShowTimeSelector] = useState(false);
     const [expandedHour, setExpandedHour] = useState<string | null>(null);
-    const [activities, setActivities] = useState<Activity[]>([]);
+    const [activities, setActivities] = useState<Activity[]>(DEFAULT_ACTIVITIES);
 
     // Load activities from storage when component mounts
     useEffect(() => {
@@ -74,45 +112,8 @@ const ScheduleScreen = () => {
                 }
             } else {
                 // Set default activities if none are saved
-                const defaultActivities: Activity[] = [
-                    {
-                        id: "1",
-                        title: "Wake Up",
-                        time: "06:00",
-                        icon: "sunny",
-                        completed: false,
-                    },
-                    {
-                        id: "2",
-                        title: "Breakfast",
-                        time: "06:30",
-                        icon: "restaurant",
-                        completed: false,
-                    },
-                    {
-                        id: "3",
-                        title: "Lunch",
-                        time: "12:00",
-                        icon: "restaurant",
-                        completed: false,
-                    },
-                    {
-                        id: "4",
-                        title: "Dinner",
-                        time: "19:00",
-                        icon: "restaurant",
-                        completed: false,
-                    },
-                    {
-                        id: "5",
-                        title: "Go to Bed",
-                        time: "22:00",
-                        icon: "bed",
-                        completed: false,
-                    }
-                ];
-                setActivities(defaultActivities);
-                await AsyncStorage.setItem('activities', JSON.stringify(defaultActivities));
+                setActivities(DEFAULT_ACTIVITIES);
+                await AsyncStorage.setItem('activities', JSON.stringify(DEFAULT_ACTIVITIES));
             }
         } catch (error) {
             console.error('Error loading activities:', error);
@@ -124,45 +125,8 @@ const ScheduleScreen = () => {
                         text: 'Reset',
                         onPress: async () => {
                             try {
-                                const defaultActivities: Activity[] = [
-                                    {
-                                        id: "1",
-                                        title: "Wake Up",
-                                        time: "06:00",
-                                        icon: "sunny",
-                                        completed: false,
-                                    },
-                                    {
-                                        id: "2",
-                                        title: "Breakfast",
-                                        time: "06:30",
-                                        icon: "restaurant",
-                                        completed: false,
-                                    },
-                                    {
-                                        id: "3",
-                                        title: "Lunch",
-                                        time: "12:00",
-                                        icon: "restaurant",
-                                        completed: false,
-                                    },
-                                    {
-                                        id: "4",
-                                        title: "Dinner",
-                                        time: "19:00",
-                                        icon: "restaurant",
-                                        completed: false,
-                                    },
-                                    {
-                                        id: "5",
-                                        title: "Go to Bed",
-                                        time: "22:00",
-                                        icon: "bed",
-                                        completed: false,
-                                    }
-                                ];
-                                setActivities(defaultActivities);
-                                await AsyncStorage.setItem('activities', JSON.stringify(defaultActivities));
+                                setActivities(DEFAULT_ACTIVITIES);
+                                await AsyncStorage.setItem('activities', JSON.stringify(DEFAULT_ACTIVITIES));
                             } catch (resetError) {
                                 console.error('Error resetting activities:', resetError);
                                 Alert.alert('Error', 'Failed to reset activities');
