@@ -10,9 +10,8 @@
     "experiments": {
       "tsconfigPaths": true
     },
-    "plugins": [
-    ],
-    "orientation": "portrait",
+    "plugins": [],
+    "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
