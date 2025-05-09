@@ -24,7 +24,7 @@ const GameCard = ({ title, screenName }: GameCardProps) => {
                         {title.charAt(0)}
                     </Text>
                 </View>
-                <Text className="text-xl font-semibold text-gray-800">
+                <Text className="text-xl font-semibold text-gray-800 ml-10">
                     {title}
                 </Text>
             </View>

@@ -26,10 +26,12 @@ const MatchingCard = ({ card, onSelect, isSelected, isError }: MatchingCardProps
             ) : (
                 <View className="flex-1 items-center justify-center">
                     {card.type === 'image' ? (
-                        <View className="w-16 h-16 bg-gray-200 rounded-full items-center justify-center">
-                            <Text className="text-lg font-semibold">
-                                {card.value.charAt(0).toUpperCase()}
-                            </Text>
+                        <View className="w-16 h-16 items-center justify-center">
+                            <Image 
+                                source={card.value}
+                                className="w-full h-full"
+                                resizeMode="contain"
+                            />
                         </View>
                     ) : (
                         <Text className="text-lg font-semibold text-center">

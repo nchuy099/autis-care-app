@@ -1,57 +1,35 @@
 import { useEffect, useState } from 'react';
 import { View, ImageBackground, Text, TouchableOpacity } from 'react-native';
-import Layout from 'components/layouts/Layout';
-import MatchingCard from 'components/games/matching/MatchingCard';
+import MemoryCard from 'components/games/memory/MemoryCard';
 import CongratsModal from 'components/games/matching/CongratsModal';
-import { GameCard, CardGroup } from 'types/game';
+import { GameCard } from 'types/game';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
 
 // Giả lập dữ liệu thẻ
-const cardGroups: CardGroup[] = [
-    { id: '1', image: require('assets/GameAssets/birdcard.png'), text: 'Con chim' },
-    { id: '2', image: require('assets/GameAssets/catcard.png'), text: 'Con mèo' },
-    { id: '3', image: require('assets/GameAssets/crabcard.png'), text: 'Con cua' },
-    { id: '4', image: require('assets/GameAssets/chickencard.png'), text: 'Con gà' },
-    { id: '5', image: require('assets/GameAssets/cowcard.png'), text: 'Con bò' },
-    { id: '6', image: require('assets/GameAssets/duckcard.png'), text: 'Con vịt' },
+const cardGroups = [
+    { id: '1', image: require('assets/GameAssets/birdcard.png') },
+    { id: '2', image: require('assets/GameAssets/catcard.png') },
+    { id: '3', image: require('assets/GameAssets/crabcard.png') },
+    { id: '4', image: require('assets/GameAssets/chickencard.png') },
+    { id: '5', image: require('assets/GameAssets/cowcard.png') },
+    { id: '6', image: require('assets/GameAssets/duckcard.png') },
 ];
 
-const MatchingGameScreen = () => {
+const MemoryGameScreen = () => {
     const navigation = useNavigation();
     const [cards, setCards] = useState<GameCard[]>([]);
-    const [selectedCard, setSelectedCard] = useState<GameCard | null>(null);
+    const [selectedCards, setSelectedCards] = useState<GameCard[]>([]);
     const [errorPair, setErrorPair] = useState<string[]>([]);
     const [isCompleted, setIsCompleted] = useState(false);
-    const [time, setTime] = useState(0);
-    const [isActive, setIsActive] = useState(false);
-
-    useEffect(() => {
-        let interval: NodeJS.Timeout | null = null;
-        if (isActive && !isCompleted) {
-            interval = setInterval(() => {
-                setTime(time => time + 1);
-            }, 1000);
-        }
-        return () => {
-            if (interval) clearInterval(interval);
-        };
-    }, [isActive, isCompleted]);
-
-    const formatTime = (seconds: number) => {
-        const minutes = Math.floor(seconds / 60);
-        const remainingSeconds = seconds % 60;
-        return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
-    };
+    const [isFlipping, setIsFlipping] = useState(false);
+    const [moves, setMoves] = useState(0);
 
     const initializeGame = () => {
-        // Chọn ngẫu nhiên 6 nhóm thẻ
-        const shuffledGroups = [...cardGroups].sort(() => Math.random() - 0.5).slice(0, 6);
-        
         // Tạo mảng thẻ từ các nhóm đã chọn
-        const gameCards: GameCard[] = shuffledGroups.flatMap(group => [
+        const gameCards: GameCard[] = cardGroups.flatMap(group => [
             {
-                id: `${group.id}-image`,
+                id: `${group.id}-1`,
                 type: 'image',
                 value: group.image,
                 groupId: group.id,
@@ -59,9 +37,9 @@ const MatchingGameScreen = () => {
                 isMatched: false
             },
             {
-                id: `${group.id}-text`,
-                type: 'text',
-                value: group.text,
+                id: `${group.id}-2`,
+                type: 'image',
+                value: group.image,
                 groupId: group.id,
                 isFlipped: false,
                 isMatched: false
@@ -70,43 +48,58 @@ const MatchingGameScreen = () => {
 
         // Xáo trộn vị trí các thẻ
         setCards(gameCards.sort(() => Math.random() - 0.5));
-        setSelectedCard(null);
+        setSelectedCards([]);
         setErrorPair([]);
         setIsCompleted(false);
-        setTime(0);
-        setIsActive(true);
+        setIsFlipping(false);
+        setMoves(0);
     };
 
     const handleCardSelect = (card: GameCard) => {
-        if (errorPair.length > 0 || card.isMatched) return;
+        if (isFlipping || card.isMatched || selectedCards.includes(card)) return;
 
-        if (!selectedCard) {
-            setSelectedCard(card);
-            return;
-        }
+        const newSelectedCards = [...selectedCards, card];
+        setSelectedCards(newSelectedCards);
+        setMoves(prev => prev + 1);
 
-        if (selectedCard.id === card.id) return;
+        // Lật thẻ được chọn
+        const updatedCards = cards.map(c =>
+            c.id === card.id ? { ...c, isFlipped: true } : c
+        );
+        setCards(updatedCards);
 
-        if (selectedCard.groupId === card.groupId) {
-            // Matched
-            const updatedCards = cards.map(c =>
-                c.groupId === card.groupId ? { ...c, isMatched: true } : c
-            );
-            setCards(updatedCards);
-            setSelectedCard(null);
+        if (newSelectedCards.length === 2) {
+            setIsFlipping(true);
+            const [first, second] = newSelectedCards;
 
-            // Check if game is completed
-            if (updatedCards.every(c => c.isMatched)) {
-                setIsCompleted(true);
-                setIsActive(false);
+            if (first.groupId === second.groupId) {
+                // Matched
+                setTimeout(() => {
+                    const matchedCards = cards.map(c =>
+                        c.groupId === first.groupId ? { ...c, isMatched: true } : c
+                    );
+                    setCards(matchedCards);
+                    setSelectedCards([]);
+                    setIsFlipping(false);
+
+                    // Check if game is completed
+                    if (matchedCards.every(c => c.isMatched)) {
+                        setIsCompleted(true);
+                    }
+                }, 1000);
+            } else {
+                // Not matched
+                setErrorPair([first.id, second.id]);
+                setTimeout(() => {
+                    const resetCards = cards.map(c =>
+                        c.id === first.id || c.id === second.id ? { ...c, isFlipped: false } : c
+                    );
+                    setCards(resetCards);
+                    setSelectedCards([]);
+                    setErrorPair([]);
+                    setIsFlipping(false);
+                }, 1000);
             }
-        } else {
-            // Not matched
-            setErrorPair([selectedCard.id, card.id]);
-            setTimeout(() => {
-                setErrorPair([]);
-                setSelectedCard(null);
-            }, 1000);
         }
     };
 
@@ -131,7 +124,7 @@ const MatchingGameScreen = () => {
                     </TouchableOpacity>
                     <View className="flex-1 items-center">
                         <Text className="text-2xl font-bold text-white">
-                            Thời gian: {formatTime(time)}
+                            Số bước: {moves}
                         </Text>
                     </View>
                     <TouchableOpacity 
@@ -147,10 +140,10 @@ const MatchingGameScreen = () => {
                         {cards.map(card => (
                             <View key={card.id} className="w-[30%]">
                                 {!card.isMatched && (
-                                    <MatchingCard
+                                    <MemoryCard
                                         card={card}
                                         onSelect={handleCardSelect}
-                                        isSelected={selectedCard?.id === card.id}
+                                        isSelected={selectedCards.includes(card)}
                                         isError={errorPair.includes(card.id)}
                                     />
                                 )}
@@ -161,8 +154,8 @@ const MatchingGameScreen = () => {
 
                 {isCompleted && (
                     <CongratsModal 
-                        onPlayAgain={initializeGame} 
-                        completionTime={time}
+                        onPlayAgain={initializeGame}
+                        moves={moves}
                     />
                 )}
             </View>
@@ -170,4 +163,4 @@ const MatchingGameScreen = () => {
     );
 };
 
-export default MatchingGameScreen; 
+export default MemoryGameScreen;
