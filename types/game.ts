@@ -22,4 +22,19 @@ export interface GameState {
     selectedCard: GameCard | null;
     isCompleted: boolean;
     showCongrats: boolean;
+}
+
+// Puzzle Game Types
+export interface PuzzlePiece {
+    id: number;
+    currentPosition: number;
+    correctPosition: number;
+    imageUrl: ImageSourcePropType;
+}
+
+export interface PuzzleState {
+    pieces: PuzzlePiece[];
+    emptyPosition: number;
+    isCompleted: boolean;
+    moves: number;
 } 

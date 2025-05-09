@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
-import { View, ImageBackground } from 'react-native';
+import { View, ImageBackground, Text, TouchableOpacity } from 'react-native';
 import Layout from 'components/layouts/Layout';
 import MatchingCard from 'components/games/matching/MatchingCard';
 import CongratsModal from 'components/games/matching/CongratsModal';
 import { GameCard, CardGroup } from 'types/game';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useNavigation } from '@react-navigation/native';
 
 // Giả lập dữ liệu thẻ
 const cardGroups: CardGroup[] = [
@@ -16,10 +18,31 @@ const cardGroups: CardGroup[] = [
 ];
 
 const MatchingGameScreen = () => {
+    const navigation = useNavigation();
     const [cards, setCards] = useState<GameCard[]>([]);
     const [selectedCard, setSelectedCard] = useState<GameCard | null>(null);
     const [errorPair, setErrorPair] = useState<string[]>([]);
     const [isCompleted, setIsCompleted] = useState(false);
+    const [time, setTime] = useState(0);
+    const [isActive, setIsActive] = useState(false);
+
+    useEffect(() => {
+        let interval: NodeJS.Timeout | null = null;
+        if (isActive && !isCompleted) {
+            interval = setInterval(() => {
+                setTime(time => time + 1);
+            }, 1000);
+        }
+        return () => {
+            if (interval) clearInterval(interval);
+        };
+    }, [isActive, isCompleted]);
+
+    const formatTime = (seconds: number) => {
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+        return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+    };
 
     const initializeGame = () => {
         // Chọn ngẫu nhiên 6 nhóm thẻ
@@ -50,6 +73,8 @@ const MatchingGameScreen = () => {
         setSelectedCard(null);
         setErrorPair([]);
         setIsCompleted(false);
+        setTime(0);
+        setIsActive(true);
     };
 
     const handleCardSelect = (card: GameCard) => {
@@ -73,6 +98,7 @@ const MatchingGameScreen = () => {
             // Check if game is completed
             if (updatedCards.every(c => c.isMatched)) {
                 setIsCompleted(true);
+                setIsActive(false);
             }
         } else {
             // Not matched
@@ -94,7 +120,28 @@ const MatchingGameScreen = () => {
             className="flex-1"
             resizeMode="cover"
         >
-            <View className="flex-1 p-4 mt-20">
+            <View className="flex-1 p-4">
+                {/* Header */}
+                <View className="flex-row justify-between items-center mt-12 mb-8">
+                    <TouchableOpacity 
+                        onPress={() => navigation.goBack()}
+                        className="bg-white p-2 rounded-full shadow-md"
+                    >
+                        <Icon name="arrow-left" size={32} color="#3B82F6" />
+                    </TouchableOpacity>
+                    <View className="flex-1 items-center">
+                        <Text className="text-2xl font-bold text-white">
+                            Thời gian: {formatTime(time)}
+                        </Text>
+                    </View>
+                    <TouchableOpacity 
+                        onPress={initializeGame}
+                        className="bg-white p-2 rounded-full shadow-md"
+                    >
+                        <Icon name="refresh" size={32} color="#3B82F6" />
+                    </TouchableOpacity>
+                </View>
+
                 <View className="flex-1 justify-center">
                     <View className="flex-row flex-wrap justify-center gap-4">
                         {cards.map(card => (
@@ -111,11 +158,14 @@ const MatchingGameScreen = () => {
                         ))}
                     </View>
                 </View>
-            </View>
 
-            {isCompleted && (
-                <CongratsModal onPlayAgain={initializeGame} />
-            )}
+                {isCompleted && (
+                    <CongratsModal 
+                        onPlayAgain={initializeGame} 
+                        completionTime={time}
+                    />
+                )}
+            </View>
         </ImageBackground>
     );
 };

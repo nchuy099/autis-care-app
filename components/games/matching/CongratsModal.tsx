@@ -2,15 +2,24 @@ import { Text, TouchableOpacity, View, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import RootStackParamList from "types/RootStackParamList";
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface CongratsModalProps {
     onPlayAgain: () => void;
+    completionTime?: number;
+    moves?: number;
 }
 
 type CongratsModalNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
-const CongratsModal = ({ onPlayAgain }: CongratsModalProps) => {
+const CongratsModal = ({ onPlayAgain, completionTime, moves }: CongratsModalProps) => {
     const navigation = useNavigation<CongratsModalNavigationProp>();
+
+    const formatTime = (seconds: number) => {
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+        return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+    };
 
     return (
         <View className="absolute inset-0 bg-black/50 items-center justify-center">
@@ -34,8 +43,40 @@ const CongratsModal = ({ onPlayAgain }: CongratsModalProps) => {
                     </Text>
                 </View>
 
+                <View className="mt-16 mb-6 items-center">
+                    {/* Completion Time */}
+                    {completionTime !== undefined && (
+                        <View className="items-center mb-4">
+                            <View className="flex-row items-center mb-2">
+                                <Icon name="clock-outline" size={24} color="#3B82F6" />
+                                <Text className="text-xl font-semibold ml-2 text-gray-800">
+                                    Thời gian hoàn thành
+                                </Text>
+                            </View>
+                            <Text className="text-3xl font-bold text-blue-500">
+                                {formatTime(completionTime)}
+                            </Text>
+                        </View>
+                    )}
+
+                    {/* Moves Count */}
+                    {moves !== undefined && (
+                        <View className="items-center">
+                            <View className="flex-row items-center mb-2">
+                                <Icon name="foot-print" size={24} color="#3B82F6" />
+                                <Text className="text-xl font-semibold ml-2 text-gray-800">
+                                    Số bước di chuyển
+                                </Text>
+                            </View>
+                            <Text className="text-3xl font-bold text-blue-500">
+                                {moves}
+                            </Text>
+                        </View>
+                    )}
+                </View>
+
                 {/* Buttons */}
-                <View className="flex-row justify-center space-x-12 mt-16">
+                <View className="flex-row justify-center space-x-12 mt-4">
                     <TouchableOpacity 
                         onPress={onPlayAgain}
                         className="items-center justify-center mx-2"
