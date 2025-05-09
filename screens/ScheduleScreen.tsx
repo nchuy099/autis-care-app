@@ -1,20 +1,62 @@
 import { useState, useRef, useEffect } from "react";
 import Layout from "components/layouts/Layout";
-import { Text, View, ScrollView, TouchableOpacity, Modal, TextInput, Platform, Dimensions } from "react-native";
+import { Text, View, ScrollView, TouchableOpacity, Modal, TextInput, Platform, Dimensions, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+type IconName = "sunny" | "restaurant" | "school" | "water" | "book" | 
+                "bed" | "game-controller" | "fitness" | "musical-notes" | "brush";
 
 interface Activity {
     id: string;
     title: string;
     time: string;
-    icon: keyof typeof Ionicons.glyphMap;
+    icon: IconName;
     completed: boolean;
 }
 
-const ICONS: (keyof typeof Ionicons.glyphMap)[] = [
+const ICONS: IconName[] = [
     "sunny", "restaurant", "school", "water", "book", 
     "bed", "game-controller", "fitness", "musical-notes", "brush"
+];
+
+const DEFAULT_ACTIVITIES: Activity[] = [
+    {
+        id: "1",
+        title: "Wake Up",
+        time: "06:00",
+        icon: "sunny",
+        completed: false,
+    },
+    {
+        id: "2",
+        title: "Breakfast",
+        time: "06:30",
+        icon: "restaurant",
+        completed: false,
+    },
+    {
+        id: "3",
+        title: "Lunch",
+        time: "12:00",
+        icon: "restaurant",
+        completed: false,
+    },
+    {
+        id: "4",
+        title: "Dinner",
+        time: "19:00",
+        icon: "restaurant",
+        completed: false,
+    },
+    {
+        id: "5",
+        title: "Go to Bed",
+        time: "22:00",
+        icon: "bed",
+        completed: false,
+    }
 ];
 
 const HOURS = Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0'));
@@ -41,47 +83,89 @@ const ScheduleScreen = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [editingActivity, setEditingActivity] = useState<Activity | null>(null);
     const [newTitle, setNewTitle] = useState("");
-    const [selectedIcon, setSelectedIcon] = useState<keyof typeof Ionicons.glyphMap>("sunny");
+    const [selectedIcon, setSelectedIcon] = useState<IconName>("sunny");
     const [selectedHour, setSelectedHour] = useState("08");
     const [selectedMinute, setSelectedMinute] = useState("00");
     const [showTimeSelector, setShowTimeSelector] = useState(false);
-    const [activities, setActivities] = useState<Activity[]>([
-        {
-            id: "1",
-            title: "Wake Up",
-            time: "06:00",
-            icon: "sunny",
-            completed: false,
-        },
-        {
-            id: "2",
-            title: "Breakfast",
-            time: "06:30",
-            icon: "restaurant",
-            completed: false,
-        },
-        {
-            id: "3",
-            title: "Lunch",
-            time: "12:00",
-            icon: "restaurant",
-            completed: false,
-        },
-        {
-            id: "4",
-            title: "Dinner",
-            time: "19:00",
-            icon: "restaurant",
-            completed: false,
-        },
-        {
-            id: "5",
-            title: "Go to Bed",
-            time: "22:00",
-            icon: "bed",
-            completed: false,
+    const [expandedHour, setExpandedHour] = useState<string | null>(null);
+    const [activities, setActivities] = useState<Activity[]>(DEFAULT_ACTIVITIES);
+
+    // Load activities from storage when component mounts
+    useEffect(() => {
+        loadActivities();
+    }, []);
+
+    // Save activities whenever they change
+    useEffect(() => {
+        saveActivities();
+    }, [activities]);
+
+    const loadActivities = async () => {
+        try {
+            const savedActivities = await AsyncStorage.getItem('activities');
+            if (savedActivities) {
+                const parsedActivities = JSON.parse(savedActivities);
+                if (Array.isArray(parsedActivities)) {
+                    setActivities(parsedActivities);
+                } else {
+                    throw new Error('Invalid activities data format');
+                }
+            } else {
+                // Set default activities if none are saved
+                setActivities(DEFAULT_ACTIVITIES);
+                await AsyncStorage.setItem('activities', JSON.stringify(DEFAULT_ACTIVITIES));
+            }
+        } catch (error) {
+            console.error('Error loading activities:', error);
+            Alert.alert(
+                'Error',
+                'Failed to load activities. Would you like to reset to default activities?',
+                [
+                    {
+                        text: 'Reset',
+                        onPress: async () => {
+                            try {
+                                setActivities(DEFAULT_ACTIVITIES);
+                                await AsyncStorage.setItem('activities', JSON.stringify(DEFAULT_ACTIVITIES));
+                            } catch (resetError) {
+                                console.error('Error resetting activities:', resetError);
+                                Alert.alert('Error', 'Failed to reset activities');
+                            }
+                        }
+                    },
+                    {
+                        text: 'Cancel',
+                        style: 'cancel'
+                    }
+                ]
+            );
         }
-    ]);
+    };
+
+    const saveActivities = async () => {
+        try {
+            if (!Array.isArray(activities)) {
+                throw new Error('Invalid activities data');
+            }
+            await AsyncStorage.setItem('activities', JSON.stringify(activities));
+        } catch (error) {
+            console.error('Error saving activities:', error);
+            Alert.alert(
+                'Error',
+                'Failed to save activities. Would you like to try again?',
+                [
+                    {
+                        text: 'Retry',
+                        onPress: () => saveActivities()
+                    },
+                    {
+                        text: 'Cancel',
+                        style: 'cancel'
+                    }
+                ]
+            );
+        }
+    };
 
     const timeSlots = Array.from({ length: 24 * 4 }, (_, i) => {
         const totalMinutes = i * 15;
@@ -95,78 +179,128 @@ const ScheduleScreen = () => {
     };
 
     const handleAddActivity = () => {
-        setIsModalVisible(true);
-        setEditingActivity(null);
-        setNewTitle("");
-        setSelectedIcon("sunny");
-        setSelectedHour("08");
-        setSelectedMinute("00");
+        try {
+            setIsModalVisible(true);
+            setEditingActivity(null);
+            setNewTitle("");
+            setSelectedIcon("sunny");
+            setSelectedHour("08");
+            setSelectedMinute("00");
+        } catch (error) {
+            console.error('Error in handleAddActivity:', error);
+            Alert.alert('Error', 'Failed to open add activity modal');
+        }
     };
 
     const handleEditActivity = (activity: Activity) => {
-        setEditingActivity(activity);
-        setNewTitle(activity.title);
-        setSelectedIcon(activity.icon);
-        // Parse time string
-        const [hours, minutes] = activity.time.split(':');
-        setSelectedHour(hours);
-        setSelectedMinute(minutes);
-        setIsModalVisible(true);
-    };
-
-    const handleDeleteActivity = (id: string) => {
-        setActivities(activities.filter(activity => activity.id !== id));
-    };
-
-    const handleSaveActivity = () => {
-        if (!newTitle.trim()) return;
-
-        const timeString = `${selectedHour}:${selectedMinute}`;
-
-        if (editingActivity) {
-            setActivities(activities.map(activity =>
-                activity.id === editingActivity.id
-                    ? { ...activity, title: newTitle, icon: selectedIcon, time: timeString }
-                    : activity
-            ));
-        } else {
-            const newActivity: Activity = {
-                id: Date.now().toString(),
-                title: newTitle,
-                icon: selectedIcon,
-                time: timeString,
-                completed: false
-            };
-            setActivities([...activities, newActivity].sort((a, b) => 
-                new Date('1970/01/01 ' + a.time).getTime() - 
-                new Date('1970/01/01 ' + b.time).getTime()
-            ));
+        try {
+            if (!activity) {
+                Alert.alert('Error', 'Invalid activity selected');
+                return;
+            }
+            setEditingActivity(activity);
+            setNewTitle(activity.title);
+            setSelectedIcon(activity.icon);
+            const [hours, minutes] = activity.time.split(':');
+            setSelectedHour(hours);
+            setSelectedMinute(minutes);
+            setIsModalVisible(true);
+        } catch (error) {
+            console.error('Error in handleEditActivity:', error);
+            Alert.alert('Error', 'Failed to edit activity');
         }
+    };
 
-        setIsModalVisible(false);
+    const handleDeleteActivity = async (id: string) => {
+        try {
+            if (!id) {
+                Alert.alert('Error', 'Invalid activity ID');
+                return;
+            }
+            const updatedActivities = activities.filter(activity => activity.id !== id);
+            setActivities(updatedActivities);
+            await saveActivities();
+        } catch (error) {
+            console.error('Error in handleDeleteActivity:', error);
+            Alert.alert('Error', 'Failed to delete activity');
+        }
+    };
+
+    const handleSaveActivity = async () => {
+        try {
+            if (!newTitle.trim()) {
+                Alert.alert('Error', 'Please enter an activity title');
+                return;
+            }
+
+            const timeString = `${selectedHour}:${selectedMinute}`;
+
+            // Check if there's already an activity at this time
+            const existingActivity = activities.find(activity => activity.time === timeString);
+            if (existingActivity && (!editingActivity || existingActivity.id !== editingActivity.id)) {
+                Alert.alert(
+                    "Time Slot Occupied",
+                    "There is already an activity scheduled at this time. Please choose a different time.",
+                    [
+                        { 
+                            text: "OK",
+                            onPress: () => {
+                                // Keep the modal open and reset the time selection
+                                setSelectedHour("08");
+                                setSelectedMinute("00");
+                            }
+                        }
+                    ]
+                );
+                return;
+            }
+
+            if (editingActivity) {
+                const updatedActivities = activities.map(activity =>
+                    activity.id === editingActivity.id
+                        ? { ...activity, title: newTitle, icon: selectedIcon, time: timeString }
+                        : activity
+                );
+                setActivities(updatedActivities);
+            } else {
+                const newActivity: Activity = {
+                    id: Date.now().toString(),
+                    title: newTitle,
+                    icon: selectedIcon,
+                    time: timeString,
+                    completed: false
+                };
+                const updatedActivities = [...activities, newActivity].sort((a, b) => 
+                    new Date('1970/01/01 ' + a.time).getTime() - 
+                    new Date('1970/01/01 ' + b.time).getTime()
+                );
+                setActivities(updatedActivities);
+            }
+
+            await saveActivities();
+            setIsModalVisible(false);
+        } catch (error) {
+            console.error('Error in handleSaveActivity:', error);
+            Alert.alert('Error', 'Failed to save activity');
+        }
+    };
+
+    const toggleHourExpansion = (hour: string) => {
+        setExpandedHour(expandedHour === hour ? null : hour);
     };
 
     const scrollToCurrentTime = () => {
-        // Get current hour
-        const currentHour = today.getHours();
-        
-        // Find the current hour mark
-        const hourMark = `${currentHour.toString().padStart(2, '0')}:00`;
+        const currentHour = today.getHours().toString().padStart(2, '0');
+        const hourMark = `${currentHour}:00`;
         const slotIndex = timeSlots.findIndex(slot => slot === hourMark);
         
-        // Get screen height
         const screenHeight = Dimensions.get('window').height;
-        
-        // Calculate the position to center the marker
-        // Each slot is 64px high, and we want the marker to be in the middle of the screen
         const slotHeight = 64;
-        const headerHeight = 120; // Approximate height of the header
+        const headerHeight = 120;
         const centerOffset = (screenHeight - headerHeight) / 2;
         
-        // Calculate scroll position to center the marker
         const scrollPosition = Math.max(0, (slotIndex * slotHeight) - centerOffset);
         
-        // Scroll to position
         scrollViewRef.current?.scrollTo({
             y: scrollPosition,
             animated: true
@@ -174,26 +308,17 @@ const ScheduleScreen = () => {
     };
 
     useEffect(() => {
-        // Get current hour
-        const currentHour = today.getHours();
-        
-        // Find the current hour mark
-        const hourMark = `${currentHour.toString().padStart(2, '0')}:00`;
+        const currentHour = today.getHours().toString().padStart(2, '0');
+        const hourMark = `${currentHour}:00`;
         const slotIndex = timeSlots.findIndex(slot => slot === hourMark);
         
-        // Get screen height
         const screenHeight = Dimensions.get('window').height;
-        
-        // Calculate the position to center the marker
-        // Each slot is 64px high, and we want the marker to be in the middle of the screen
         const slotHeight = 64;
-        const headerHeight = 120; // Approximate height of the header
+        const headerHeight = 120;
         const centerOffset = (screenHeight - headerHeight) / 2;
         
-        // Calculate scroll position to center the marker
         const scrollPosition = Math.max(0, (slotIndex * slotHeight) - centerOffset);
         
-        // Scroll to position after a short delay to ensure rendering
         setTimeout(() => {
             scrollViewRef.current?.scrollTo({
                 y: scrollPosition,
@@ -206,8 +331,8 @@ const ScheduleScreen = () => {
         <Layout>
             <View className="flex-1">
                 {/* Header */}
-                <View className="items-center mb-6">
-                    <View className="w-full flex-row items-center justify-between mb-2">
+                <View className="items-center mb-6 mt-4">
+                    <View className="w-full flex-row items-center justify-between mb-4">
                         <TouchableOpacity 
                             onPress={() => navigation.goBack()}
                             className="w-12 h-12 bg-white rounded-full items-center justify-center shadow-md"
@@ -243,79 +368,132 @@ const ScheduleScreen = () => {
                         {/* Vertical line */}
                         <View className="absolute left-16 top-0 bottom-0 w-0.5 bg-gray-200" />
                         
-                        {timeSlots.map((timeSlot, index) => {
-                            const activity = getActivityForTime(timeSlot);
-                            const isHourMark = index % 4 === 0;
-                            const isCurrentTime = timeSlot === currentTime;
+                        {HOURS.map((hour) => {
+                            const isCurrentHour = hour === today.getHours().toString().padStart(2, '0');
+                            const isExpanded = expandedHour === hour;
                             
-                            // Check if this is the current hour
-                            const [slotHour] = timeSlot.split(':');
-                            const currentHour = today.getHours().toString().padStart(2, '0');
-                            const isCurrentHour = slotHour === currentHour && isHourMark;
-
                             return (
-                                <View 
-                                    key={timeSlot} 
-                                    className="flex-row relative h-16"
-                                >
-                                    {/* Time marker */}
-                                    <View className="w-16 items-end pr-4 justify-center">
-                                        <Text 
-                                            className={
-                                                isCurrentHour 
-                                                    ? "text-sm text-indigo-600 font-bold"
-                                                    : isHourMark 
-                                                        ? "text-sm text-gray-800 font-bold" 
-                                                        : "text-sm text-gray-400"
-                                            }
-                                        >
-                                            {isHourMark ? timeSlot : timeSlot.split(':')[1]}
-                                        </Text>
-                                    </View>
-
-                                    {/* Current hour arrow marker */}
-                                    {isCurrentHour && (
-                                        <View className="absolute left-16 top-0 bottom-0 items-center">
-                                            <View className="w-4 h-4 bg-indigo-500 rotate-45" />
-                                            <View className="w-0.5 h-full bg-indigo-500" />
-                                        </View>
-                                    )}
-
-                                    {/* Horizontal line */}
-                                    <View className="flex-1 justify-center">
-                                        <View 
-                                            className={
-                                                isCurrentHour
-                                                    ? "h-0.5 bg-indigo-500 w-full"
-                                                    : isHourMark 
-                                                        ? "h-0.5 bg-gray-300 w-full" 
-                                                        : "h-[1px] bg-gray-200 w-full"
-                                            } 
-                                        />
-                                    </View>
-
-                                    {/* Activity card (if exists) */}
-                                    {activity && (
-                                        <View className="absolute left-20 right-4 top-1 bottom-1">
-                                            <TouchableOpacity 
-                                                onPress={() => handleEditActivity(activity)}
-                                                className={`bg-white rounded-lg shadow-lg flex-row items-center h-full px-3 ${
-                                                    isCurrentHour ? 'border-2 border-indigo-500' : ''
-                                                }`}
+                                <View key={hour}>
+                                    {/* Hour marker */}
+                                    <TouchableOpacity 
+                                        onPress={() => toggleHourExpansion(hour)}
+                                        className="flex-row relative h-16"
+                                    >
+                                        <View className="w-16 items-end pr-4 justify-center">
+                                            <Text 
+                                                className={
+                                                    isCurrentHour 
+                                                        ? "text-sm text-indigo-600 font-bold"
+                                                        : "text-sm text-gray-800 font-bold"
+                                                }
                                             >
-                                                <View className="w-8 h-8 bg-yellow-100 rounded-full items-center justify-center mr-3">
-                                                    <Ionicons 
-                                                        name={activity.icon} 
-                                                        size={20} 
-                                                        color="#1e1b4b" 
-                                                    />
-                                                </View>
-                                                <Text className="text-lg font-semibold flex-1">
-                                                    {activity.title}
-                                                </Text>
-                                            </TouchableOpacity>
+                                                {hour}:00
+                                            </Text>
                                         </View>
-                                    )}
+
+                                        {/* Current hour arrow marker */}
+                                        {isCurrentHour && (
+                                            <View className="absolute left-16 top-0 bottom-0 items-center">
+                                                <View className="w-4 h-4 bg-indigo-500 rotate-45" />
+                                                <View className="w-0.5 h-full bg-indigo-500" />
+                                            </View>
+                                        )}
+
+                                        {/* Horizontal line */}
+                                        <View className="flex-1 justify-center">
+                                            <View 
+                                                className={
+                                                    isCurrentHour
+                                                        ? "h-0.5 bg-indigo-500 w-full"
+                                                        : "h-0.5 bg-gray-300 w-full"
+                                                } 
+                                            />
+                                        </View>
+
+                                        {/* Activity icon for hour mark */}
+                                        {activities.some(activity => activity.time.startsWith(`${hour}:`)) && (
+                                            <View className="absolute left-20 right-4 top-1 bottom-1">
+                                                {isExpanded ? (
+                                                    getActivityForTime(`${hour}:00`) && (
+                                                        <TouchableOpacity 
+                                                            onPress={() => handleEditActivity(getActivityForTime(`${hour}:00`)!)}
+                                                            className="bg-white rounded-lg shadow-lg flex-row items-center h-full px-3"
+                                                        >
+                                                            <View className="w-8 h-8 bg-yellow-100 rounded-full items-center justify-center mr-3">
+                                                                <Ionicons 
+                                                                    name={getActivityForTime(`${hour}:00`)!.icon} 
+                                                                    size={20} 
+                                                                    color="#1e1b4b" 
+                                                                />
+                                                            </View>
+                                                            <Text className="text-lg font-semibold flex-1">
+                                                                {getActivityForTime(`${hour}:00`)!.title}
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )
+                                                ) : (
+                                                    <View className="flex-row space-x-2">
+                                                        {activities
+                                                            .filter(activity => {
+                                                                const activityHour = activity.time.split(':')[0];
+                                                                return activityHour === hour;
+                                                            })
+                                                            .map(activity => (
+                                                                <View key={activity.id} className="w-8 h-8 bg-yellow-100 rounded-full items-center justify-center">
+                                                                    <Ionicons 
+                                                                        name={activity.icon} 
+                                                                        size={20} 
+                                                                        color="#1e1b4b" 
+                                                                    />
+                                                                </View>
+                                                            ))}
+                                                    </View>
+                                                )}
+                                            </View>
+                                        )}
+                                    </TouchableOpacity>
+
+                                    {/* 15-minute intervals when expanded */}
+                                    {isExpanded && MINUTES.slice(1).map((minute) => {
+                                        const timeSlot = `${hour}:${minute}`;
+                                        const activity = getActivityForTime(timeSlot);
+                                        
+                                        return (
+                                            <View key={timeSlot} className="flex-row relative h-16">
+                                                <View className="w-16 items-end pr-4 justify-center">
+                                                    <Text className="text-sm text-gray-400">
+                                                        {minute}
+                                                    </Text>
+                                                </View>
+
+                                                {/* Horizontal line */}
+                                                <View className="flex-1 justify-center">
+                                                    <View className="h-[1px] bg-gray-200 w-full" />
+                                                </View>
+
+                                                {/* Activity card */}
+                                                {activity && (
+                                                    <View className="absolute left-20 right-4 top-1 bottom-1">
+                                                        <TouchableOpacity 
+                                                            onPress={() => handleEditActivity(activity)}
+                                                            className="bg-white rounded-lg shadow-lg flex-row items-center h-full px-3"
+                                                        >
+                                                            <View className="w-8 h-8 bg-yellow-100 rounded-full items-center justify-center mr-3">
+                                                                <Ionicons 
+                                                                    name={activity.icon} 
+                                                                    size={20} 
+                                                                    color="#1e1b4b" 
+                                                                />
+                                                            </View>
+                                                            <Text className="text-lg font-semibold flex-1">
+                                                                {activity.title}
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    </View>
+                                                )}
+                                            </View>
+                                        );
+                                    })}
                                 </View>
                             );
                         })}
@@ -364,7 +542,7 @@ const ScheduleScreen = () => {
                                         <View className="flex-1 mr-2">
                                             <Text className="text-sm text-gray-600 mb-2">Hour</Text>
                                             <ScrollView className="border border-gray-200 rounded-lg p-2 max-h-32">
-                                                {Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0')).map(hour => (
+                                                {HOURS.map(hour => (
                                                     <TouchableOpacity
                                                         key={hour}
                                                         onPress={() => setSelectedHour(hour)}
@@ -380,7 +558,7 @@ const ScheduleScreen = () => {
                                         <View className="flex-1 ml-2">
                                             <Text className="text-sm text-gray-600 mb-2">Minute</Text>
                                             <ScrollView className="border border-gray-200 rounded-lg p-2 max-h-32">
-                                                {Array.from({ length: 4 }, (_, i) => (i * 15).toString().padStart(2, '0')).map(minute => (
+                                                {MINUTES.map(minute => (
                                                     <TouchableOpacity
                                                         key={minute}
                                                         onPress={() => setSelectedMinute(minute)}
