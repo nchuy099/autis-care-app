@@ -189,353 +189,367 @@ import bookIcon from '../../assets/talk_assets/school_supplies/book.png'; // Reu
 
 // Define type colors
 const COLORS = {
-    core: "#CAFFBF",        // Soft orange
-    back: "#E0E0E0",        // Light gray
-    food: "#FFD6A5",        // Soft green
-    animals: "#9BF6FF",     // Light cyan
-    activities: "#A0C4FF",  // Soft blue
-    emotions: "#FFC6FF",    // Soft pink
-    clothing: "#FDFFB6",    // Light yellow
-    places: "#BDB2FF",      // Soft purple
-    people: "#FFD6A5",      // Soft orange
-    objects: "#CAFFBF",     // Soft green
-    household: "#9BF6FF",   // Light cyan
-    entertainment: "#A0C4FF", // Soft blue
-    transportation: "#FFC6FF", // Soft pink
-    body_health: "#FDFFB6", // Light yellow
-    directions: "#BDB2FF",  // Soft purple
-    colors: "#FFD6A5",      // Soft orange
-    attributes: "#CAFFBF",  // Soft green
-    pronouns_words: "#9BF6FF", // Light cyan
-    miscellaneous: "#A0C4FF", // Soft blue
-    school_supplies: "#9BF6FF" // Light cyan
+    core: "bg-yellow-100",        // Light green
+    back: "bg-gray-200",         // Light gray
+    activities: "bg-orange-100",   // Light orange
+    emotion: "bg-pink-100",     // Light pink
+    health: "bg-cyan-100",      // Light cyan
+    others: "bg-green-100",     // Light green for other types
+    yes: "bg-green-100",        // Light green for "Có"
+    no: "bg-red-100 border-red-300", // Light red with red border for "Không"
+    lightYellow: 'bg-yellow-100'
+};
+
+// Type to color mapping
+const TYPE_COLOR_MAP: Record<string, string> = {
+    'yes': COLORS.yes,
+    'no': COLORS.no,
+    'core': COLORS.core,
+    'back': COLORS.back,
+    'activities': COLORS.activities,
+    'emotion': COLORS.emotion,
+    'health': COLORS.health,
+    'others': COLORS.others
+};
+
+// Utility function to get color by type
+const getColorByType = (type: string): string => {
+    return TYPE_COLOR_MAP[type] || COLORS.others;
 };
 
 export const vocabularyData: CardItem[] = [
     // Core words
-    { id: '1', label: 'Có', type: 'core', color: COLORS.core, image: yesIcon },
-    { id: '2', label: 'Không', type: 'core', color: COLORS.core, image: noIcon },
-    { id: '3', label: 'Tôi', type: 'core', color: COLORS.core, image: iIcon },
-    { id: '4', label: 'Bạn', type: 'core', color: COLORS.core, image: youIcon },
-    { id: '5', label: 'Ba', type: 'core', color: COLORS.core, image: dadIcon },
-    { id: '6', label: 'Mẹ', type: 'core', color: COLORS.core, image: momIcon },
-    { id: '7', label: 'Xin chào', type: 'core', color: COLORS.core, image: helloIcon },
+    { id: '1', label: 'Có', type: 'yes', color: getColorByType('yes'), image: yesIcon },
+    { id: '2', label: 'Không', type: 'no', color: getColorByType('no'), image: noIcon },
+    { id: '3', label: 'Tôi', type: 'core', color: getColorByType('core'), image: iIcon },
+    { id: '4', label: 'Bạn', type: 'core', color: getColorByType('core'), image: youIcon },
+    { id: '5', label: 'Ba', type: 'core', color: getColorByType('core'), image: dadIcon },
+    { id: '6', label: 'Mẹ', type: 'core', color: getColorByType('core'), image: momIcon },
+    // { id: '7', label: 'Xin chào', type: 'core', color: getColorByType('core'), image: helloIcon },
 
-
-
-    // Categories
     {
         id: '10',
-        label: 'Đồ ăn',
-        image: pizzaIcon,
-        type: 'food',
-        color: COLORS.food,
-        isCategory: true,
-        subWords: [
-            { id: '10.1', label: 'Táo', image: appleIcon, type: 'food', color: COLORS.food },
-            { id: '10.2', label: 'Chuối', image: bananaIcon, type: 'food', color: COLORS.food },
-            { id: '10.3', label: 'Bánh kem', image: cakeIcon, type: 'food', color: COLORS.food },
-            { id: '10.4', label: 'Pizza', image: pizzaIcon, type: 'food', color: COLORS.food },
-            { id: '10.5', label: 'Nước', image: waterIcon, type: 'food', color: COLORS.food },
-            { id: '10.6', label: 'Sandwich', image: sandwichIcon, type: 'food', color: COLORS.food },
-            { id: '10.7', label: 'Nước ép', image: juiceIcon, type: 'food', color: COLORS.food },
-            { id: '10.8', label: 'Sữa', image: milkIcon, type: 'food', color: COLORS.food },
-            { id: '10.9', label: 'Kem', image: iceCreamIcon, type: 'food', color: COLORS.food },
-            { id: '10.10', label: 'Bữa sáng', image: breakfastIcon, type: 'food', color: COLORS.food },
-            { id: '10.11', label: 'Bữa trưa', image: lunchIcon, type: 'food', color: COLORS.food },
-            { id: '10.12', label: 'Bữa tối', image: dinnerIcon, type: 'food', color: COLORS.food },
-            { id: '10.13', label: 'Trái cây', image: fruitIcon, type: 'food', color: COLORS.food },
-            { id: '10.14', label: 'Rau', image: vegetablesIcon, type: 'food', color: COLORS.food },
-            { id: '10.15', label: 'Sô-cô-la', image: chocolateIcon, type: 'food', color: COLORS.food },
-            { id: '10.16', label: 'Kẹo', image: candyIcon, type: 'food', color: COLORS.food },
-            { id: '10.17', label: 'Quay lại', type: 'back', color: COLORS.back, image: MaterialIcons.name === 'arrow-back' ? MaterialIcons : undefined }
-        ]
-    },
-    {
-        id: '11',
         label: 'Hoạt động',
         image: playIcon,
         type: 'activities',
-        color: COLORS.activities,
+        color: getColorByType('activities'),
         isCategory: true,
         subWords: [
-            { id: '11.1', label: 'Ăn', image: eatIcon, type: 'activities', color: COLORS.activities },
-            { id: '11.2', label: 'Uống', image: drinkIcon, type: 'activities', color: COLORS.activities },
-            { id: '11.3', label: 'Chơi', image: playIcon, type: 'activities', color: COLORS.activities },
-            { id: '11.4', label: 'Đi', image: goIcon, type: 'activities', color: COLORS.activities },
-            { id: '11.5', label: 'Đọc', image: readIcon, type: 'activities', color: COLORS.activities },
-            { id: '11.6', label: 'Ngủ', image: sleepIcon, type: 'activities', color: COLORS.activities },
-            { id: '11.7', label: 'Bơi', image: swimIcon, type: 'activities', color: COLORS.activities },
-            { id: '11.8', label: 'Đi bộ', image: walkIcon, type: 'activities', color: COLORS.activities },
-            { id: '11.9', label: 'Làm việc', image: workIcon, type: 'activities', color: COLORS.activities },
-            { id: '11.10', label: 'Nghe', image: listenIcon, type: 'activities', color: COLORS.activities },
-            { id: '11.11', label: 'Xem', image: watchIcon, type: 'activities', color: COLORS.activities },
-            { id: '11.12', label: 'Giúp đỡ', image: helpIcon, type: 'activities', color: COLORS.activities },
-            { id: '11.13', label: 'Nấu ăn', image: cookIcon, type: 'activities', color: COLORS.activities },
-            { id: '11.14', label: 'Cắm trại', image: campIcon, type: 'activities', color: COLORS.activities },
-            { id: '11.15', label: 'Ra ngoài', image: goOutsideIcon, type: 'activities', color: COLORS.activities },
-            { id: '11.16', label: 'Vẽ', image: artIcon, type: 'activities', color: COLORS.activities },
-            { id: '11.17', label: 'Quay lại', type: 'back', color: COLORS.back, image: MaterialIcons.name === 'arrow-back' ? MaterialIcons : undefined }
+            { id: '10.1', label: 'Ăn', image: eatIcon, type: 'activities', color: getColorByType('activities') },
+            { id: '10.2', label: 'Uống', image: drinkIcon, type: 'activities', color: getColorByType('activities') },
+            { id: '10.3', label: 'Chơi', image: playIcon, type: 'activities', color: getColorByType('activities') },
+            { id: '10.4', label: 'Đi', image: goIcon, type: 'activities', color: getColorByType('activities') },
+            { id: '10.5', label: 'Đọc', image: readIcon, type: 'activities', color: getColorByType('activities') },
+            { id: '10.6', label: 'Ngủ', image: sleepIcon, type: 'activities', color: getColorByType('activities') },
+            { id: '10.7', label: 'Bơi', image: swimIcon, type: 'activities', color: getColorByType('activities') },
+            { id: '10.8', label: 'Đi bộ', image: walkIcon, type: 'activities', color: getColorByType('activities') },
+            { id: '10.9', label: 'Làm việc', image: workIcon, type: 'activities', color: getColorByType('activities') },
+            { id: '10.10', label: 'Nghe', image: listenIcon, type: 'activities', color: getColorByType('activities') },
+            { id: '10.11', label: 'Xem', image: watchIcon, type: 'activities', color: getColorByType('activities') },
+            { id: '10.12', label: 'Giúp đỡ', image: helpIcon, type: 'activities', color: getColorByType('activities') },
+            { id: '10.13', label: 'Nấu ăn', image: cookIcon, type: 'activities', color: getColorByType('activities') },
+            { id: '10.14', label: 'Cắm trại', image: campIcon, type: 'activities', color: getColorByType('activities') },
+            { id: '10.15', label: 'Ra ngoài', image: goOutsideIcon, type: 'activities', color: getColorByType('activities') },
+            { id: '10.16', label: 'Vẽ', image: artIcon, type: 'activities', color: getColorByType('activities') },
+            { id: '10.17', label: 'Quay lại', type: 'back', color: getColorByType('back'), image: MaterialIcons.name === 'arrow-back' ? MaterialIcons : undefined }
         ]
     },
+
     {
-        id: '12',
-        label: 'Động vật',
-        image: dogIcon,
-        type: 'animals',
-        color: COLORS.animals,
-        isCategory: true,
-        subWords: [
-            { id: '12.1', label: 'Chó', image: dogIcon, type: 'animals', color: COLORS.animals },
-            { id: '12.2', label: 'Mèo', image: catIcon, type: 'animals', color: COLORS.animals },
-            { id: '12.3', label: 'Chim', image: birdIcon, type: 'animals', color: COLORS.animals },
-            { id: '12.4', label: 'Gấu', image: bearIcon, type: 'animals', color: COLORS.animals },
-            { id: '12.5', label: 'Sư tử', image: lionIcon, type: 'animals', color: COLORS.animals },
-            { id: '12.6', label: 'Ngựa', image: horseIcon, type: 'animals', color: COLORS.animals },
-            { id: '12.7', label: 'Bò', image: cowIcon, type: 'animals', color: COLORS.animals },
-            { id: '12.8', label: 'Hươu cao cổ', image: giraffeIcon, type: 'animals', color: COLORS.animals },
-            { id: '12.9', label: 'Nai', image: deerIcon, type: 'animals', color: COLORS.animals },
-            { id: '12.10', label: 'Cáo', image: foxIcon, type: 'animals', color: COLORS.animals },
-            { id: '12.11', label: 'Cá heo', image: dolphinIcon, type: 'animals', color: COLORS.animals },
-            { id: '12.12', label: 'Khỉ đột', image: gorillaIcon, type: 'animals', color: COLORS.animals },
-            { id: '12.13', label: 'Quay lại', type: 'back', color: COLORS.back, image: MaterialIcons.name === 'arrow-back' ? MaterialIcons : undefined }
-        ]
-    },
-    {
-        id: '13',
+        id: '11',
         label: 'Cảm xúc',
         image: happyIcon,
-        type: 'emotions',
-        color: COLORS.emotions,
+        type: 'emotion',
+        color: getColorByType('emotion'),
         isCategory: true,
         subWords: [
-            { id: '13.1', label: 'Vui', image: happyIcon, type: 'emotions', color: COLORS.emotions },
-            { id: '13.2', label: 'Buồn', image: sadIcon, type: 'emotions', color: COLORS.emotions },
-            { id: '13.3', label: 'Giận', image: angryIcon, type: 'emotions', color: COLORS.emotions },
-            { id: '13.4', label: 'Sợ', image: scaredIcon, type: 'emotions', color: COLORS.emotions },
-            { id: '13.5', label: 'Ngạc nhiên', image: surprisedIcon, type: 'emotions', color: COLORS.emotions },
-            { id: '13.6', label: 'Phấn khích', image: excitedIcon, type: 'emotions', color: COLORS.emotions },
-            { id: '13.7', label: 'Lo lắng', image: worriedIcon, type: 'emotions', color: COLORS.emotions },
-            { id: '13.8', label: 'Tốt', image: goodIcon, type: 'emotions', color: COLORS.emotions },
-            { id: '13.9', label: 'Tệ', image: badIcon, type: 'emotions', color: COLORS.emotions },
-            { id: '13.10', label: 'Nóng', image: hotIcon, type: 'emotions', color: COLORS.emotions },
-            { id: '13.11', label: 'Quay lại', type: 'back', color: COLORS.back, image: MaterialIcons.name === 'arrow-back' ? MaterialIcons : undefined }
+            { id: '11.1', label: 'Vui', image: happyIcon, type: 'emotion', color: getColorByType('emotion') },
+            { id: '11.2', label: 'Buồn', image: sadIcon, type: 'emotion', color: getColorByType('emotion') },
+            { id: '11.3', label: 'Giận', image: angryIcon, type: 'emotion', color: getColorByType('emotion') },
+            { id: '11.4', label: 'Sợ', image: scaredIcon, type: 'emotion', color: getColorByType('emotion') },
+            { id: '11.5', label: 'Ngạc nhiên', image: surprisedIcon, type: 'emotion', color: getColorByType('emotion') },
+            { id: '11.6', label: 'Phấn khích', image: excitedIcon, type: 'emotion', color: getColorByType('emotion') },
+            { id: '11.7', label: 'Lo lắng', image: worriedIcon, type: 'emotion', color: getColorByType('emotion') },
+            { id: '11.8', label: 'Tốt', image: goodIcon, type: 'emotion', color: getColorByType('emotion') },
+            { id: '11.9', label: 'Tệ', image: badIcon, type: 'emotion', color: getColorByType('emotion') },
+            { id: '11.10', label: 'Nóng', image: hotIcon, type: 'emotion', color: getColorByType('emotion') },
+            { id: '11.11', label: 'Quay lại', type: 'back', color: getColorByType('back'), image: MaterialIcons.name === 'arrow-back' ? MaterialIcons : undefined }
         ]
     },
+
     {
-        id: '14',
-        label: 'Giải trí',
-        image: videoGamesIcon,
-        type: 'entertainment',
-        color: COLORS.entertainment,
+        id: '22',
+        label: 'Sức khỏe',
+        image: medicineIcon,
+        type: 'health',
+        color: getColorByType('health'),
         isCategory: true,
         subWords: [
-            { id: '14.1', label: 'Bóng chày', image: baseballIcon, type: 'entertainment', color: COLORS.entertainment },
-            { id: '14.2', label: 'Bóng rổ', image: basketballIcon, type: 'entertainment', color: COLORS.entertainment },
-            { id: '14.3', label: 'Bóng đá', image: soccerIcon, type: 'entertainment', color: COLORS.entertainment },
-            { id: '14.4', label: 'Tennis', image: tennisIcon, type: 'entertainment', color: COLORS.entertainment },
-            { id: '14.5', label: 'Golf', image: golfIcon, type: 'entertainment', color: COLORS.entertainment },
-            { id: '14.6', label: 'Bowling', image: bowlingIcon, type: 'entertainment', color: COLORS.entertainment },
-            { id: '14.7', label: 'Bingo', image: bingoIcon, type: 'entertainment', color: COLORS.entertainment },
-            { id: '14.8', label: 'Dã ngoại', image: picnicIcon, type: 'entertainment', color: COLORS.entertainment },
-            { id: '14.9', label: 'Trò chơi điện tử', image: videoGamesIcon, type: 'entertainment', color: COLORS.entertainment },
-            { id: '14.10', label: 'Quay lại', type: 'back', color: COLORS.back, image: MaterialIcons.name === 'arrow-back' ? MaterialIcons : undefined }
+            { id: '22.1', label: 'Ốm', image: sickIcon, type: 'health', color: getColorByType('health') },
+            { id: '22.2', label: 'Sốt', image: feverIcon, type: 'health', color: getColorByType('health') },
+            { id: '22.3', label: 'Cảm lạnh', image: coldIcon, type: 'health', color: getColorByType('health') },
+            { id: '22.4', label: 'Đau đầu', image: headacheIcon, type: 'health', color: getColorByType('health') },
+            { id: '22.5', label: 'Đau bụng', image: stomachAcheIcon, type: 'health', color: getColorByType('health') },
+            { id: '22.6', label: 'Đau răng', image: toothacheIcon, type: 'health', color: getColorByType('health') },
+            { id: '22.7', label: 'Thuốc', image: medicineIcon, type: 'health', color: getColorByType('health') },
+            { id: '22.8', label: 'Bụng', image: stomachIcon, type: 'health', color: getColorByType('health') },
+            { id: '22.9', label: 'Ngực', image: chestIcon, type: 'health', color: getColorByType('health') },
+            { id: '22.10', label: 'Cổ họng', image: throatIcon, type: 'health', color: getColorByType('health') },
+            { id: '22.11', label: 'Da', image: skinIcon, type: 'health', color: getColorByType('health') },
+            { id: '22.12', label: 'Quay lại', type: 'back', color: getColorByType('back'), image: MaterialIcons.name === 'arrow-back' ? MaterialIcons : undefined }
         ]
     },
+
     {
-        id: '15',
-        label: 'Địa điểm',
-        image: schoolIcon,
-        type: 'places',
-        color: COLORS.places,
-        isCategory: true,
-        subWords: [
-            { id: '15.1', label: 'Trường học', image: schoolIcon, type: 'places', color: COLORS.places },
-            { id: '15.2', label: 'Bãi biển', image: beachIcon, type: 'places', color: COLORS.places },
-            { id: '15.3', label: 'Ngân hàng', image: bankIcon, type: 'places', color: COLORS.places },
-            { id: '15.4', label: 'Nhà thờ', image: churchIcon, type: 'places', color: COLORS.places },
-            { id: '15.5', label: 'Lớp học', image: classRoomIcon, type: 'places', color: COLORS.places },
-            { id: '15.6', label: 'Cửa hàng', image: shopIcon, type: 'places', color: COLORS.places },
-            { id: '15.7', label: 'Công viên', image: themeParkIcon, type: 'places', color: COLORS.places },
-            { id: '15.8', label: 'Sân trượt', image: skateParkIcon, type: 'places', color: COLORS.places },
-            { id: '15.9', label: 'Phòng vẽ', image: artRoomIcon, type: 'places', color: COLORS.places },
-            { id: '15.10', label: 'Quay lại', type: 'back', color: COLORS.back, image: MaterialIcons.name === 'arrow-back' ? MaterialIcons : undefined }
-        ]
-    },
-    {
-        id: '16',
+        id: '12',
         label: 'Người',
         image: peopleIcon,
-        type: 'people',
-        color: COLORS.people,
+        type: 'others',
+        color: getColorByType('others'),
         isCategory: true,
         subWords: [
-            { id: '16.1', label: 'Mẹ', image: momIcon, type: 'people', color: COLORS.people },
-            { id: '16.2', label: 'Ba', image: dadIcon, type: 'people', color: COLORS.people },
-            { id: '16.3', label: 'Bác sĩ', image: doctorIcon, type: 'people', color: COLORS.people },
-            { id: '16.4', label: 'Giáo viên', image: teacherIcon, type: 'people', color: COLORS.people },
-            { id: '16.5', label: 'Mọi người', image: peopleIcon, type: 'people', color: COLORS.people },
-            { id: '16.6', label: 'Quay lại', type: 'back', color: COLORS.back, image: MaterialIcons.name === 'arrow-back' ? MaterialIcons : undefined }
+            { id: '12.1', label: 'Mẹ', image: momIcon, type: 'others', color: getColorByType('others') },
+            { id: '12.2', label: 'Ba', image: dadIcon, type: 'others', color: getColorByType('others') },
+            { id: '12.3', label: 'Bác sĩ', image: doctorIcon, type: 'others', color: getColorByType('others') },
+            { id: '12.4', label: 'Giáo viên', image: teacherIcon, type: 'others', color: getColorByType('others') },
+            { id: '12.5', label: 'Mọi người', image: peopleIcon, type: 'others', color: getColorByType('others') },
+            { id: '12.6', label: 'Quay lại', type: 'back', color: getColorByType('back'), image: MaterialIcons.name === 'arrow-back' ? MaterialIcons : undefined }
         ]
     },
+
+    // Categories
     {
-        id: '17',
-        label: 'Phương tiện',
-        image: busIcon,
-        type: 'transportation',
-        color: COLORS.transportation,
+        id: '13',
+        label: 'Đồ ăn',
+        image: pizzaIcon,
+        type: 'others',
+        color: getColorByType('others'),
         isCategory: true,
         subWords: [
-            { id: '17.1', label: 'Xe buýt', image: busIcon, type: 'transportation', color: COLORS.transportation },
-            { id: '17.2', label: 'Xe lăn', image: wheelchairIcon, type: 'transportation', color: COLORS.transportation },
-            { id: '17.3', label: 'Xe đồ chơi', image: toyCarIcon, type: 'transportation', color: COLORS.transportation },
-            { id: '17.4', label: 'Quay lại', type: 'back', color: COLORS.back, image: MaterialIcons.name === 'arrow-back' ? MaterialIcons : undefined }
-        ]
-    },
-    {
-        id: '18',
-        label: 'Màu sắc',
-        image: rainbowIcon,
-        type: 'colors',
-        color: COLORS.colors,
-        isCategory: true,
-        subWords: [
-            { id: '18.1', label: 'Đỏ', image: redIcon, type: 'colors', color: COLORS.colors },
-            { id: '18.2', label: 'Xanh da trời', image: blueIcon, type: 'colors', color: COLORS.colors },
-            { id: '18.3', label: 'Xanh lá', image: greenIcon, type: 'colors', color: COLORS.colors },
-            { id: '18.4', label: 'Vàng', image: yellowIcon, type: 'colors', color: COLORS.colors },
-            { id: '18.5', label: 'Tím', image: purpleIcon, type: 'colors', color: COLORS.colors },
-            { id: '18.6', label: 'Hồng', image: pinkIcon, type: 'colors', color: COLORS.colors },
-            { id: '18.7', label: 'Đen', image: blackIcon, type: 'colors', color: COLORS.colors },
-            { id: '18.8', label: 'Nâu', image: brownIcon, type: 'colors', color: COLORS.colors },
-            { id: '18.9', label: 'Cầu vồng', image: rainbowIcon, type: 'colors', color: COLORS.colors },
-            { id: '18.10', label: 'Quay lại', type: 'back', color: COLORS.back, image: MaterialIcons.name === 'arrow-back' ? MaterialIcons : undefined }
+            { id: '13.1', label: 'Táo', image: appleIcon, type: 'others', color: getColorByType('others') },
+            { id: '13.2', label: 'Chuối', image: bananaIcon, type: 'others', color: getColorByType('others') },
+            { id: '13.3', label: 'Bánh kem', image: cakeIcon, type: 'others', color: getColorByType('others') },
+            { id: '13.4', label: 'Pizza', image: pizzaIcon, type: 'others', color: getColorByType('others') },
+            { id: '13.5', label: 'Nước', image: waterIcon, type: 'others', color: getColorByType('others') },
+            { id: '13.6', label: 'Sandwich', image: sandwichIcon, type: 'others', color: getColorByType('others') },
+            { id: '13.7', label: 'Nước ép', image: juiceIcon, type: 'others', color: getColorByType('others') },
+            { id: '13.8', label: 'Sữa', image: milkIcon, type: 'others', color: getColorByType('others') },
+            { id: '13.9', label: 'Kem', image: iceCreamIcon, type: 'others', color: getColorByType('others') },
+            { id: '13.13', label: 'Bữa sáng', image: breakfastIcon, type: 'others', color: getColorByType('others') },
+            { id: '13.11', label: 'Bữa trưa', image: lunchIcon, type: 'others', color: getColorByType('others') },
+            { id: '13.12', label: 'Bữa tối', image: dinnerIcon, type: 'others', color: getColorByType('others') },
+            { id: '13.13', label: 'Trái cây', image: fruitIcon, type: 'others', color: getColorByType('others') },
+            { id: '13.14', label: 'Rau', image: vegetablesIcon, type: 'others', color: getColorByType('others') },
+            { id: '13.15', label: 'Sô-cô-la', image: chocolateIcon, type: 'others', color: getColorByType('others') },
+            { id: '13.16', label: 'Kẹo', image: candyIcon, type: 'others', color: getColorByType('others') },
+            { id: '13.17', label: 'Quay lại', type: 'back', color: getColorByType('back'), image: MaterialIcons.name === 'arrow-back' ? MaterialIcons : undefined }
         ]
     },
     {
         id: '19',
         label: 'Quần áo',
         image: clothesIcon,
-        type: 'clothing',
-        color: COLORS.clothing,
+        type: 'others',
+        color: getColorByType('others'),
         isCategory: true,
         subWords: [
-            { id: '19.1', label: 'Áo', image: shirtIcon, type: 'clothing', color: COLORS.clothing },
-            { id: '19.2', label: 'Quần', image: pantsIcon, type: 'clothing', color: COLORS.clothing },
-            { id: '19.3', label: 'Giày', image: shoesIcon, type: 'clothing', color: COLORS.clothing },
-            { id: '19.4', label: 'Mũ', image: hatIcon, type: 'clothing', color: COLORS.clothing },
-            { id: '19.5', label: 'Váy', image: dressIcon, type: 'clothing', color: COLORS.clothing },
-            { id: '19.6', label: 'Áo khoác', image: coatIcon, type: 'clothing', color: COLORS.clothing },
-            { id: '19.7', label: 'Tất', image: socksIcon, type: 'clothing', color: COLORS.clothing },
-            { id: '19.8', label: 'Kính mát', image: sunglassesIcon, type: 'clothing', color: COLORS.clothing },
-            { id: '19.9', label: 'Găng tay', image: glovesIcon, type: 'clothing', color: COLORS.clothing },
-            { id: '19.10', label: 'Váy ngắn', image: skirtIcon, type: 'clothing', color: COLORS.clothing },
-            { id: '19.11', label: 'Quay lại', type: 'back', color: COLORS.back, image: MaterialIcons.name === 'arrow-back' ? MaterialIcons : undefined }
+            { id: '19.1', label: 'Áo', image: shirtIcon, type: 'others', color: getColorByType('others') },
+            { id: '19.2', label: 'Quần', image: pantsIcon, type: 'others', color: getColorByType('others') },
+            { id: '19.3', label: 'Giày', image: shoesIcon, type: 'others', color: getColorByType('others') },
+            { id: '19.4', label: 'Mũ', image: hatIcon, type: 'others', color: getColorByType('others') },
+            { id: '19.5', label: 'Váy', image: dressIcon, type: 'others', color: getColorByType('others') },
+            { id: '19.6', label: 'Áo khoác', image: coatIcon, type: 'others', color: getColorByType('others') },
+            { id: '19.7', label: 'Tất', image: socksIcon, type: 'others', color: getColorByType('others') },
+            { id: '19.8', label: 'Kính mát', image: sunglassesIcon, type: 'others', color: getColorByType('others') },
+            { id: '19.9', label: 'Găng tay', image: glovesIcon, type: 'others', color: getColorByType('others') },
+            { id: '19.10', label: 'Váy ngắn', image: skirtIcon, type: 'others', color: getColorByType('others') },
+            { id: '19.11', label: 'Quay lại', type: 'back', color: getColorByType('back'), image: MaterialIcons.name === 'arrow-back' ? MaterialIcons : undefined }
         ]
     },
+
+    {
+        id: '24',
+        label: 'Đồ học tập',
+        image: backpackIcon,
+        type: 'others',
+        color: getColorByType('others'),
+        isCategory: true,
+        subWords: [
+            { id: '24.1', label: 'Balo', image: backpackIcon, type: 'others', color: getColorByType('others') },
+            { id: '24.2', label: 'Túi', image: bagIcon, type: 'others', color: getColorByType('others') },
+            { id: '24.3', label: 'Bóng', image: schoolBallIcon, type: 'others', color: getColorByType('others') },
+            { id: '24.4', label: 'Bút màu', image: crayonIcon, type: 'others', color: getColorByType('others') },
+            { id: '24.5', label: 'Sàn', image: floorIcon, type: 'others', color: getColorByType('others') },
+            { id: '24.6', label: 'Nước uống', image: schoolWaterIcon, type: 'others', color: getColorByType('others') },
+            { id: '24.7', label: 'Bút chì', image: pencilIcon, type: 'others', color: getColorByType('others') },
+            { id: '24.8', label: 'Sách', image: bookIcon, type: 'others', color: getColorByType('others') },
+            { id: '24.9', label: 'Quay lại', type: 'back', color: getColorByType('back'), image: MaterialIcons.name === 'arrow-back' ? MaterialIcons : undefined }
+        ]
+    },
+    {
+        id: '14',
+        label: 'Giải trí',
+        image: videoGamesIcon,
+        type: 'others',
+        color: getColorByType('others'),
+        isCategory: true,
+        subWords: [
+            { id: '14.1', label: 'Bóng chày', image: baseballIcon, type: 'others', color: getColorByType('others') },
+            { id: '14.2', label: 'Bóng rổ', image: basketballIcon, type: 'others', color: getColorByType('others') },
+            { id: '14.3', label: 'Bóng đá', image: soccerIcon, type: 'others', color: getColorByType('others') },
+            { id: '14.4', label: 'Tennis', image: tennisIcon, type: 'others', color: getColorByType('others') },
+            { id: '14.5', label: 'Golf', image: golfIcon, type: 'others', color: getColorByType('others') },
+            { id: '14.6', label: 'Bowling', image: bowlingIcon, type: 'others', color: getColorByType('others') },
+            { id: '14.7', label: 'Bingo', image: bingoIcon, type: 'others', color: getColorByType('others') },
+            { id: '14.8', label: 'Dã ngoại', image: picnicIcon, type: 'others', color: getColorByType('others') },
+            { id: '14.9', label: 'Trò chơi điện tử', image: videoGamesIcon, type: 'others', color: getColorByType('others') },
+            { id: '14.10', label: 'Quay lại', type: 'back', color: getColorByType('back'), image: MaterialIcons.name === 'arrow-back' ? MaterialIcons : undefined }
+        ]
+    },
+    {
+        id: '15',
+        label: 'Địa điểm',
+        image: schoolIcon,
+        type: 'others',
+        color: getColorByType('others'),
+        isCategory: true,
+        subWords: [
+            { id: '15.1', label: 'Trường học', image: schoolIcon, type: 'others', color: getColorByType('others') },
+            { id: '15.2', label: 'Bãi biển', image: beachIcon, type: 'others', color: getColorByType('others') },
+            { id: '15.3', label: 'Ngân hàng', image: bankIcon, type: 'others', color: getColorByType('others') },
+            { id: '15.4', label: 'Nhà thờ', image: churchIcon, type: 'others', color: getColorByType('others') },
+            { id: '15.5', label: 'Lớp học', image: classRoomIcon, type: 'others', color: getColorByType('others') },
+            { id: '15.6', label: 'Cửa hàng', image: shopIcon, type: 'others', color: getColorByType('others') },
+            { id: '15.7', label: 'Công viên', image: themeParkIcon, type: 'others', color: getColorByType('others') },
+            { id: '15.8', label: 'Sân trượt', image: skateParkIcon, type: 'others', color: getColorByType('others') },
+            { id: '15.9', label: 'Phòng vẽ', image: artRoomIcon, type: 'others', color: getColorByType('others') },
+            { id: '15.10', label: 'Quay lại', type: 'back', color: getColorByType('back'), image: MaterialIcons.name === 'arrow-back' ? MaterialIcons : undefined }
+        ]
+    },
+
+    {
+        id: '16',
+        label: 'Phương tiện',
+        image: busIcon,
+        type: 'others',
+        color: getColorByType('others'),
+        isCategory: true,
+        subWords: [
+            { id: '16.1', label: 'Xe buýt', image: busIcon, type: 'others', color: getColorByType('others') },
+            { id: '16.2', label: 'Xe lăn', image: wheelchairIcon, type: 'others', color: getColorByType('others') },
+            { id: '16.3', label: 'Xe đồ chơi', image: toyCarIcon, type: 'others', color: getColorByType('others') },
+            { id: '16.4', label: 'Quay lại', type: 'back', color: getColorByType('back'), image: MaterialIcons.name === 'arrow-back' ? MaterialIcons : undefined }
+        ]
+    },
+
+    {
+        id: '17',
+        label: 'Động vật',
+        image: dogIcon,
+        type: 'others',
+        color: getColorByType('others'),
+        isCategory: true,
+        subWords: [
+            { id: '17.1', label: 'Chó', image: dogIcon, type: 'others', color: getColorByType('others') },
+            { id: '17.2', label: 'Mèo', image: catIcon, type: 'others', color: getColorByType('others') },
+            { id: '17.3', label: 'Chim', image: birdIcon, type: 'others', color: getColorByType('others') },
+            { id: '17.4', label: 'Gấu', image: bearIcon, type: 'others', color: getColorByType('others') },
+            { id: '17.5', label: 'Sư tử', image: lionIcon, type: 'others', color: getColorByType('others') },
+            { id: '17.6', label: 'Ngựa', image: horseIcon, type: 'others', color: getColorByType('others') },
+            { id: '17.7', label: 'Bò', image: cowIcon, type: 'others', color: getColorByType('others') },
+            { id: '17.8', label: 'Hươu cao cổ', image: giraffeIcon, type: 'others', color: getColorByType('others') },
+            { id: '17.9', label: 'Nai', image: deerIcon, type: 'others', color: getColorByType('others') },
+            { id: '17.10', label: 'Cáo', image: foxIcon, type: 'others', color: getColorByType('others') },
+            { id: '17.11', label: 'Cá heo', image: dolphinIcon, type: 'others', color: getColorByType('others') },
+            { id: '17.17', label: 'Khỉ đột', image: gorillaIcon, type: 'others', color: getColorByType('others') },
+            { id: '17.13', label: 'Quay lại', type: 'back', color: getColorByType('back'), image: MaterialIcons.name === 'arrow-back' ? MaterialIcons : undefined }
+        ]
+    },
+    {
+        id: '18',
+        label: 'Màu sắc',
+        image: rainbowIcon,
+        type: 'others',
+        color: getColorByType('others'),
+        isCategory: true,
+        subWords: [
+            { id: '18.1', label: 'Đỏ', image: redIcon, type: 'others', color: getColorByType('others') },
+            { id: '18.2', label: 'Xanh da trời', image: blueIcon, type: 'others', color: getColorByType('others') },
+            { id: '18.3', label: 'Xanh lá', image: greenIcon, type: 'others', color: getColorByType('others') },
+            { id: '18.4', label: 'Vàng', image: yellowIcon, type: 'others', color: getColorByType('others') },
+            { id: '18.5', label: 'Tím', image: purpleIcon, type: 'others', color: getColorByType('others') },
+            { id: '18.6', label: 'Hồng', image: pinkIcon, type: 'others', color: getColorByType('others') },
+            { id: '18.7', label: 'Đen', image: blackIcon, type: 'others', color: getColorByType('others') },
+            { id: '18.8', label: 'Nâu', image: brownIcon, type: 'others', color: getColorByType('others') },
+            { id: '18.9', label: 'Cầu vồng', image: rainbowIcon, type: 'others', color: getColorByType('others') },
+            { id: '18.10', label: 'Quay lại', type: 'back', color: getColorByType('back'), image: MaterialIcons.name === 'arrow-back' ? MaterialIcons : undefined }
+        ]
+    },
+
     {
         id: '20',
         label: 'Đồ gia dụng',
         image: houseIcon,
-        type: 'household',
-        color: COLORS.household,
+        type: 'others',
+        color: getColorByType('others'),
         isCategory: true,
         subWords: [
-            { id: '20.1', label: 'Nhà', image: houseIcon, type: 'household', color: COLORS.household },
-            { id: '20.2', label: 'Giường', image: bedIcon, type: 'household', color: COLORS.household },
-            { id: '20.3', label: 'Ghế', image: chairIcon, type: 'household', color: COLORS.household },
-            { id: '20.4', label: 'Bàn', image: tableIcon, type: 'household', color: COLORS.household },
-            { id: '20.5', label: 'Cửa', image: doorIcon, type: 'household', color: COLORS.household },
-            { id: '20.6', label: 'Đèn', image: lampIcon, type: 'household', color: COLORS.household },
-            { id: '20.7', label: 'Nhà vệ sinh', image: toiletIcon, type: 'household', color: COLORS.household },
-            { id: '20.8', label: 'Tủ lạnh', image: refrigeratorIcon, type: 'household', color: COLORS.household },
-            { id: '20.9', label: 'Lò vi sóng', image: microwaveIcon, type: 'household', color: COLORS.household },
-            { id: '20.10', label: 'Bàn làm việc', image: deskIcon, type: 'household', color: COLORS.household },
-            { id: '20.11', label: 'Quay lại', type: 'back', color: COLORS.back, image: MaterialIcons.name === 'arrow-back' ? MaterialIcons : undefined }
+            { id: '20.1', label: 'Nhà', image: houseIcon, type: 'others', color: getColorByType('others') },
+            { id: '20.2', label: 'Giường', image: bedIcon, type: 'others', color: getColorByType('others') },
+            { id: '20.3', label: 'Ghế', image: chairIcon, type: 'others', color: getColorByType('others') },
+            { id: '20.4', label: 'Bàn', image: tableIcon, type: 'others', color: getColorByType('others') },
+            { id: '20.5', label: 'Cửa', image: doorIcon, type: 'others', color: getColorByType('others') },
+            { id: '20.6', label: 'Đèn', image: lampIcon, type: 'others', color: getColorByType('others') },
+            { id: '20.7', label: 'Nhà vệ sinh', image: toiletIcon, type: 'others', color: getColorByType('others') },
+            { id: '20.8', label: 'Tủ lạnh', image: refrigeratorIcon, type: 'others', color: getColorByType('others') },
+            { id: '20.9', label: 'Lò vi sóng', image: microwaveIcon, type: 'others', color: getColorByType('others') },
+            { id: '20.10', label: 'Bàn làm việc', image: deskIcon, type: 'others', color: getColorByType('others') },
+            { id: '20.11', label: 'Quay lại', type: 'back', color: getColorByType('back'), image: MaterialIcons.name === 'arrow-back' ? MaterialIcons : undefined }
         ]
     },
     {
         id: '21',
         label: 'Cơ thể',
         image: bodyIcon,
-        type: 'body_health',
-        color: COLORS.body_health,
+        type: 'others',
+        color: getColorByType('others'),
         isCategory: true,
         subWords: [
-            { id: '21.1', label: 'Cơ thể', image: bodyIcon, type: 'body_health', color: COLORS.body_health },
-            { id: '21.2', label: 'Đầu', image: headIcon, type: 'body_health', color: COLORS.body_health },
-            { id: '21.3', label: 'Tay', image: armIcon, type: 'body_health', color: COLORS.body_health },
-            { id: '21.4', label: 'Chân', image: legIcon, type: 'body_health', color: COLORS.body_health },
-            { id: '21.5', label: 'Bàn chân', image: footIcon, type: 'body_health', color: COLORS.body_health },
-            { id: '21.6', label: 'Mắt', image: eyeIcon, type: 'body_health', color: COLORS.body_health },
-            { id: '21.7', label: 'Tai', image: earIcon, type: 'body_health', color: COLORS.body_health },
-            { id: '21.8', label: 'Mũi', image: noseIcon, type: 'body_health', color: COLORS.body_health },
-            { id: '21.9', label: 'Miệng', image: mouthIcon, type: 'body_health', color: COLORS.body_health },
-            { id: '21.10', label: 'Răng', image: teethIcon, type: 'body_health', color: COLORS.body_health },
-            { id: '21.11', label: 'Lưỡi', image: tongueIcon, type: 'body_health', color: COLORS.body_health },
-            { id: '21.12', label: 'Tóc', image: hairIcon, type: 'body_health', color: COLORS.body_health },
-            { id: '21.13', label: 'Quay lại', type: 'back', color: COLORS.back, image: MaterialIcons.name === 'arrow-back' ? MaterialIcons : undefined }
+            { id: '21.1', label: 'Cơ thể', image: bodyIcon, type: 'others', color: getColorByType('others') },
+            { id: '21.2', label: 'Đầu', image: headIcon, type: 'others', color: getColorByType('others') },
+            { id: '21.3', label: 'Tay', image: armIcon, type: 'others', color: getColorByType('others') },
+            { id: '21.4', label: 'Chân', image: legIcon, type: 'others', color: getColorByType('others') },
+            { id: '21.5', label: 'Bàn chân', image: footIcon, type: 'others', color: getColorByType('others') },
+            { id: '21.6', label: 'Mắt', image: eyeIcon, type: 'others', color: getColorByType('others') },
+            { id: '21.7', label: 'Tai', image: earIcon, type: 'others', color: getColorByType('others') },
+            { id: '21.8', label: 'Mũi', image: noseIcon, type: 'others', color: getColorByType('others') },
+            { id: '21.9', label: 'Miệng', image: mouthIcon, type: 'others', color: getColorByType('others') },
+            { id: '21.10', label: 'Răng', image: teethIcon, type: 'others', color: getColorByType('others') },
+            { id: '21.11', label: 'Lưỡi', image: tongueIcon, type: 'others', color: getColorByType('others') },
+            { id: '21.12', label: 'Tóc', image: hairIcon, type: 'others', color: getColorByType('others') },
+            { id: '21.13', label: 'Quay lại', type: 'back', color: getColorByType('back'), image: MaterialIcons.name === 'arrow-back' ? MaterialIcons : undefined }
         ]
     },
-    {
-        id: '22',
-        label: 'Sức khỏe',
-        image: medicineIcon,
-        type: 'body_health',
-        color: COLORS.body_health,
-        isCategory: true,
-        subWords: [
-            { id: '22.1', label: 'Ốm', image: sickIcon, type: 'body_health', color: COLORS.body_health },
-            { id: '22.2', label: 'Sốt', image: feverIcon, type: 'body_health', color: COLORS.body_health },
-            { id: '22.3', label: 'Cảm lạnh', image: coldIcon, type: 'body_health', color: COLORS.body_health },
-            { id: '22.4', label: 'Đau đầu', image: headacheIcon, type: 'body_health', color: COLORS.body_health },
-            { id: '22.5', label: 'Đau bụng', image: stomachAcheIcon, type: 'body_health', color: COLORS.body_health },
-            { id: '22.6', label: 'Đau răng', image: toothacheIcon, type: 'body_health', color: COLORS.body_health },
-            { id: '22.7', label: 'Thuốc', image: medicineIcon, type: 'body_health', color: COLORS.body_health },
-            { id: '22.8', label: 'Bụng', image: stomachIcon, type: 'body_health', color: COLORS.body_health },
-            { id: '22.9', label: 'Ngực', image: chestIcon, type: 'body_health', color: COLORS.body_health },
-            { id: '22.10', label: 'Cổ họng', image: throatIcon, type: 'body_health', color: COLORS.body_health },
-            { id: '22.11', label: 'Da', image: skinIcon, type: 'body_health', color: COLORS.body_health },
-            { id: '22.12', label: 'Quay lại', type: 'back', color: COLORS.back, image: MaterialIcons.name === 'arrow-back' ? MaterialIcons : undefined }
-        ]
-    },
+
     {
         id: '23',
         label: 'Hướng',
         image: upIcon,
-        type: 'directions',
-        color: COLORS.directions,
+        type: 'others',
+        color: getColorByType('others'),
         isCategory: true,
         subWords: [
-            { id: '23.1', label: 'Lên', image: upIcon, type: 'directions', color: COLORS.directions },
-            { id: '23.2', label: 'Xuống', image: downIcon, type: 'directions', color: COLORS.directions },
-            { id: '23.3', label: 'Trái', image: leftIcon, type: 'directions', color: COLORS.directions },
-            { id: '23.4', label: 'Phải', image: rightIcon, type: 'directions', color: COLORS.directions },
-            { id: '23.5', label: 'Phía trước', image: frontIcon, type: 'directions', color: COLORS.directions },
-            { id: '23.6', label: 'Phía sau', image: backIcon, type: 'directions', color: COLORS.directions },
-            { id: '23.7', label: 'Tiến tới', image: forwardsIcon, type: 'directions', color: COLORS.directions },
-            { id: '23.8', label: 'Lùi lại', image: backwardsIcon, type: 'directions', color: COLORS.directions },
-            { id: '23.9', label: 'Băng qua', image: acrossIcon, type: 'directions', color: COLORS.directions },
-            { id: '23.10', label: 'Quay lại', type: 'back', color: COLORS.back, image: MaterialIcons.name === 'arrow-back' ? MaterialIcons : undefined }
+            { id: '23.1', label: 'Lên', image: upIcon, type: 'others', color: getColorByType('others') },
+            { id: '23.2', label: 'Xuống', image: downIcon, type: 'others', color: getColorByType('others') },
+            { id: '23.3', label: 'Trái', image: leftIcon, type: 'others', color: getColorByType('others') },
+            { id: '23.4', label: 'Phải', image: rightIcon, type: 'others', color: getColorByType('others') },
+            { id: '23.5', label: 'Phía trước', image: frontIcon, type: 'others', color: getColorByType('others') },
+            { id: '23.6', label: 'Phía sau', image: backIcon, type: 'others', color: getColorByType('others') },
+            { id: '23.7', label: 'Tiến tới', image: forwardsIcon, type: 'others', color: getColorByType('others') },
+            { id: '23.8', label: 'Lùi lại', image: backwardsIcon, type: 'others', color: getColorByType('others') },
+            { id: '23.9', label: 'Băng qua', image: acrossIcon, type: 'others', color: getColorByType('others') },
+            { id: '23.10', label: 'Quay lại', type: 'back', color: getColorByType('back'), image: MaterialIcons.name === 'arrow-back' ? MaterialIcons : undefined }
         ]
     },
-    {
-        id: '24',
-        label: 'Đồ học tập',
-        image: backpackIcon,
-        type: 'school_supplies',
-        color: COLORS.school_supplies,
-        isCategory: true,
-        subWords: [
-            { id: '24.1', label: 'Balo', image: backpackIcon, type: 'school_supplies', color: COLORS.school_supplies },
-            { id: '24.2', label: 'Túi', image: bagIcon, type: 'school_supplies', color: COLORS.school_supplies },
-            { id: '24.3', label: 'Bóng', image: schoolBallIcon, type: 'school_supplies', color: COLORS.school_supplies },
-            { id: '24.4', label: 'Bút màu', image: crayonIcon, type: 'school_supplies', color: COLORS.school_supplies },
-            { id: '24.5', label: 'Sàn', image: floorIcon, type: 'school_supplies', color: COLORS.school_supplies },
-            { id: '24.6', label: 'Nước uống', image: schoolWaterIcon, type: 'school_supplies', color: COLORS.school_supplies },
-            { id: '24.7', label: 'Bút chì', image: pencilIcon, type: 'school_supplies', color: COLORS.school_supplies },
-            { id: '24.8', label: 'Sách', image: bookIcon, type: 'school_supplies', color: COLORS.school_supplies },
-            { id: '24.9', label: 'Quay lại', type: 'back', color: COLORS.back, image: MaterialIcons.name === 'arrow-back' ? MaterialIcons : undefined }
-        ]
-    }
+
 ];
