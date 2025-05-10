@@ -1,13 +1,17 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, ImageBackground, Text, Dimensions, TouchableOpacity } from 'react-native';
+import { Audio } from 'expo-av';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import PuzzlePiece from 'components/games/puzzle/PuzzlePiece';
 import { PuzzlePiece as PuzzlePieceType, PuzzleState } from 'types/game';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useNavigation } from '@react-navigation/native';
 import CongratsModal from 'components/games/matching/CongratsModal';
 
 // Giả lập dữ liệu puzzle
-const puzzleImage = require('assets/GameAssets/dog_puzzle.png');
+const puzzleImages = [
+    require('assets/GameAssets/dog_puzzle.png'),
+    require('assets/GameAssets/panda_puzzle.jpg'),
+];
 
 const GRID_SIZE = 3;
 const TOTAL_PIECES = GRID_SIZE * GRID_SIZE;
@@ -25,8 +29,57 @@ const PuzzleGameScreen = () => {
         isCompleted: false,
         moves: 0
     });
+    const [backgroundMusic, setBackgroundMusic] = useState<Audio.Sound | null>(null);
+
+    // Hàm phát âm thanh
+    const playSound = async (soundFile: any) => {
+        try {
+            const { sound } = await Audio.Sound.createAsync(soundFile);
+            await sound.playAsync();
+            sound.setOnPlaybackStatusUpdate(async (status) => {
+                if (status.isLoaded && status.didJustFinish) {
+                    await sound.unloadAsync();
+                }
+            });
+        } catch (error) {
+            console.error('Error playing sound:', error);
+        }
+    };
+
+    // Hàm phát nhạc nền
+    const playBackgroundMusic = async () => {
+        try {
+            const { sound } = await Audio.Sound.createAsync(
+                require('assets/GameAssets/sounds/background_music2.mp3'),
+                { isLooping: true }
+            );
+            setBackgroundMusic(sound);
+            await sound.playAsync();
+        } catch (error) {
+            console.error('Error playing background music:', error);
+        }
+    };
+
+    // Hàm dừng nhạc nền
+    const stopBackgroundMusic = async () => {
+        if (backgroundMusic) {
+            await backgroundMusic.stopAsync();
+            await backgroundMusic.unloadAsync();
+            setBackgroundMusic(null);
+        }
+    };
+
+    const handleBack = async () => {
+        await stopBackgroundMusic();
+        navigation.goBack();
+    };
 
     const initializePuzzle = () => {
+        // Dừng nhạc nền cũ nếu có
+        stopBackgroundMusic();
+
+        // Chọn ngẫu nhiên 1 trong 2 hình puzzle
+        const randomImage = puzzleImages[Math.floor(Math.random() * puzzleImages.length)];
         const pieces: PuzzlePieceType[] = [];
         
         // Tạo các mảnh puzzle
@@ -35,7 +88,7 @@ const PuzzleGameScreen = () => {
                 id: i,
                 currentPosition: i,
                 correctPosition: i,
-                imageUrl: puzzleImage
+                imageUrl: randomImage
             });
         }
 
@@ -72,6 +125,7 @@ const PuzzleGameScreen = () => {
             isCompleted: false,
             moves: 0
         });
+
     };
 
     const isAdjacent = (position1: number, position2: number) => {
@@ -117,6 +171,9 @@ const PuzzleGameScreen = () => {
 
     useEffect(() => {
         initializePuzzle();
+        return () => {
+            stopBackgroundMusic();
+        };
     }, []);
 
     // Sắp xếp các mảnh theo vị trí hiện tại
@@ -125,9 +182,33 @@ const PuzzleGameScreen = () => {
         orderedPieces[piece.currentPosition] = piece;
     });
 
+    // Sử dụng useFocusEffect để kiểm soát nhạc nền
+    useFocusEffect(
+        React.useCallback(() => {
+            let isActive = true;
+            
+            if (isActive) {
+                playBackgroundMusic();
+            }
+            
+            return () => {
+                isActive = false;
+                stopBackgroundMusic();
+            };
+        }, [])
+    );
+
+    // Stop music on navigation back/gesture
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('beforeRemove', async () => {
+            await stopBackgroundMusic();
+        });
+        return unsubscribe;
+    }, [navigation]);
+
     return (
         <ImageBackground 
-            source={require('assets/GameAssets/background_animal.jpg')} 
+            source={require('assets/GameAssets/GameComponent/background_animal.jpg')} 
             className="flex-1"
             resizeMode="cover"
         >
@@ -135,7 +216,7 @@ const PuzzleGameScreen = () => {
                 {/* Header */}
                 <View className="flex-row justify-between items-center mt-12 mb-8">
                     <TouchableOpacity 
-                        onPress={() => navigation.goBack()}
+                        onPress={handleBack}
                         className="bg-white p-2 rounded-full shadow-md"
                     >
                         <Icon name="arrow-left" size={32} color="#3B82F6" />
@@ -145,12 +226,14 @@ const PuzzleGameScreen = () => {
                             Số bước: {puzzleState.moves}
                         </Text>
                     </View>
-                    <TouchableOpacity 
-                        onPress={initializePuzzle}
-                        className="bg-white p-2 rounded-full shadow-md"
-                    >
-                        <Icon name="refresh" size={32} color="#3B82F6" />
-                    </TouchableOpacity>
+                    <View className="flex-row">
+                        <TouchableOpacity 
+                            onPress={initializePuzzle}
+                            className="bg-white p-2 rounded-full shadow-md"
+                        >
+                            <Icon name="refresh" size={32} color="#3B82F6" />
+                        </TouchableOpacity>
+                    </View>
                 </View>
 
                 {/* Game Board */}
