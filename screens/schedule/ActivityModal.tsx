@@ -166,17 +166,14 @@ const ActivityModal: React.FC<ActivityModalProps> = ({
                     </ScrollView>
 
                     <View className="flex-row justify-between">
-                        {editingActivity && onDelete && (
+                        {editingActivity ? (
                             <TouchableOpacity
-                                onPress={() => {
-                                    onDelete(editingActivity.id);
-                                    onClose();
-                                }}
-                                className="bg-red-500 rounded-xl py-4 px-6"
+                                onPress={onClose}
+                                className="bg-gray-500 rounded-xl py-4 px-6"
                             >
-                                <Text className="text-white font-bold text-lg">Xóa</Text>
+                                <Text className="text-white font-bold text-lg">Hủy</Text>
                             </TouchableOpacity>
-                        )}
+                        ) : null}
                         <TouchableOpacity
                             onPress={handleSave}
                             className={`bg-indigo-500 rounded-xl py-4 ${editingActivity ? 'px-6' : 'flex-1'}`}

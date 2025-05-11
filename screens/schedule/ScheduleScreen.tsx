@@ -7,6 +7,7 @@ import Layout from "components/layouts/Layout";
 import { Activity } from './types';
 import { DEFAULT_ACTIVITIES } from './constants';
 import ActivityModal from './ActivityModal';
+import ActivityInfoModal from './ActivityInfoModal';
 import SettingsModal from './SettingsModal';
 import Timeline, { TimelineRef } from './Timeline';
 import * as ActivityHandlers from './activityHandlers';
@@ -29,7 +30,9 @@ const ScheduleScreen = () => {
 
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isSettingsVisible, setIsSettingsVisible] = useState(false);
+    const [isInfoModalVisible, setIsInfoModalVisible] = useState(false);
     const [editingActivity, setEditingActivity] = useState<Activity | null>(null);
+    const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
     const [expandedHour, setExpandedHour] = useState<string | null>(null);
     const [activities, setActivities] = useState<Activity[]>(DEFAULT_ACTIVITIES);
     const [currentTimeColor, setCurrentTimeColor] = useState('#4f46e5');
@@ -49,7 +52,6 @@ const ScheduleScreen = () => {
 
         loadSounds();
 
-        
         return () => {
             buttonPressSound.current?.unloadAsync();
             buttonPress2Sound.current?.unloadAsync();
@@ -78,11 +80,10 @@ const ScheduleScreen = () => {
         ActivityHandlers.handleLoadActivities(setActivities);
     }, []);
 
-    // Add scroll effect
     useEffect(() => {
         const timer = setTimeout(() => {
             timelineRef.current?.scrollToCurrentTime();
-        }, 500); // Wait
+        }, 500);
 
         return () => clearTimeout(timer);
     }, []);
@@ -133,6 +134,31 @@ const ScheduleScreen = () => {
     const handleJumpToCurrentTime = async () => {
         await playButtonPress();
         timelineRef.current?.scrollToCurrentTime();
+    };
+
+    const handleActivityPress = async (activity: Activity) => {
+        await playButtonPress();
+        setSelectedActivity(activity);
+        setIsInfoModalVisible(true);
+    };
+
+    const handleToggleComplete = async (activity: Activity) => {
+        await playButtonPress();
+        const updatedActivity = { ...activity, completed: !activity.completed };
+        const updatedActivities = activities.map(a => 
+            a.id === activity.id ? updatedActivity : a
+        );
+        setActivities(updatedActivities);
+        ActivityHandlers.saveActivities(updatedActivities);
+    };
+
+    const handleResetToDefault = async () => {
+        await playButtonPress();
+        // First clear all activities
+        await ActivityHandlers.clearAllActivities();
+        // Then set and save default activities
+        setActivities(DEFAULT_ACTIVITIES);
+        await ActivityHandlers.saveActivities(DEFAULT_ACTIVITIES);
     };
 
     return (
@@ -189,7 +215,7 @@ const ScheduleScreen = () => {
                         activities={activities}
                         expandedHour={expandedHour}
                         onToggleHour={setExpandedHour}
-                        onEditActivity={handleEditActivity}
+                        onActivityPress={handleActivityPress}
                         currentHour={currentHour}
                         currentTimeColor={currentTimeColor}
                     />
@@ -202,11 +228,27 @@ const ScheduleScreen = () => {
                         editingActivity={editingActivity}
                     />
 
+                    <ActivityInfoModal
+                        visible={isInfoModalVisible}
+                        onClose={() => setIsInfoModalVisible(false)}
+                        activity={selectedActivity}
+                        onToggleComplete={handleToggleComplete}
+                    />
+
                     <SettingsModal
                         visible={isSettingsVisible}
                         onClose={handleCloseSettings}
                         onColorChange={setCurrentTimeColor}
                         currentColor={currentTimeColor}
+                        onEditActivity={(activity) => {
+                            setEditingActivity(activity);
+                            setIsModalVisible(true);
+                        }}
+                        onDeleteActivity={(activity) => {
+                            handleDeleteActivity(activity.id);
+                        }}
+                        activities={activities}
+                        onResetToDefault={handleResetToDefault}
                     />
                 </View>
             </ImageBackground>

@@ -1,33 +1,31 @@
-import React, { forwardRef, useImperativeHandle } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
+import React, { forwardRef, useImperativeHandle, useRef } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Activity } from './types';
 import { HOURS, MINUTES } from './constants';
-
-interface TimelineProps {
-    activities: Activity[];
-    expandedHour: string | null;
-    onToggleHour: (hour: string | null) => void;
-    onEditActivity: (activity: Activity) => void;
-    currentHour: string;
-    currentTimeColor: string;
-}
 
 export interface TimelineRef {
     scrollToCurrentTime: () => void;
 }
 
-const Timeline: React.ForwardRefExoticComponent<TimelineProps & React.RefAttributes<TimelineRef>> = forwardRef<TimelineRef, TimelineProps>((props, ref) => {
-    const {
-        activities,
-        expandedHour,
-        onToggleHour,
-        onEditActivity,
-        currentHour,
-        currentTimeColor
-    } = props;
+interface TimelineProps {
+    activities: Activity[];
+    expandedHour: string | null;
+    onToggleHour: (hour: string | null) => void;
+    onActivityPress: (activity: Activity) => void;
+    currentHour: string;
+    currentTimeColor: string;
+}
 
-    const scrollViewRef = React.useRef<ScrollView>(null);
+const Timeline = forwardRef<TimelineRef, TimelineProps>(({
+    activities,
+    expandedHour,
+    onToggleHour,
+    onActivityPress,
+    currentHour,
+    currentTimeColor
+}, ref) => {
+    const scrollViewRef = useRef<ScrollView>(null);
 
     useImperativeHandle(ref, () => ({
         scrollToCurrentTime: () => {
@@ -101,14 +99,14 @@ const Timeline: React.ForwardRefExoticComponent<TimelineProps & React.RefAttribu
                                         {isExpanded ? (
                                             getActivityForTime(`${hour}:00`) && (
                                                 <TouchableOpacity 
-                                                    onPress={() => onEditActivity(getActivityForTime(`${hour}:00`)!)}
+                                                    onPress={() => onActivityPress(getActivityForTime(`${hour}:00`)!)}
                                                     className="bg-white rounded-lg shadow-lg flex-row items-center h-full px-3"
                                                 >
                                                     <View 
                                                         className="w-8 h-8 rounded-full items-center justify-center mr-3"
                                                         style={{ backgroundColor: currentTimeColor }}
                                                     >
-                                                        <Ionicons 
+                                                        <Ionicons
                                                             name={getActivityForTime(`${hour}:00`)!.icon} 
                                                             size={20} 
                                                             color="white" 
@@ -169,7 +167,7 @@ const Timeline: React.ForwardRefExoticComponent<TimelineProps & React.RefAttribu
                                         {activity && (
                                             <View className="absolute left-20 right-4 top-1 bottom-1">
                                                 <TouchableOpacity 
-                                                    onPress={() => onEditActivity(activity)}
+                                                    onPress={() => onActivityPress(activity)}
                                                     className="bg-white rounded-lg shadow-lg flex-row items-center h-full px-3"
                                                 >
                                                     <View 

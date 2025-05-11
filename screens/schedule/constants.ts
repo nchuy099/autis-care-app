@@ -8,16 +8,16 @@ export const ICONS: IconName[] = [
 export const DEFAULT_ACTIVITIES: Activity[] = [
     {
         id: '1',
-        title: 'Thức dậydậy',
-        time: '066:00',
+        title: 'Thức dậy',
+        time: '06:00',
         icon: 'sunny',
-        description: 'Thức dậy',
+        description: 'Thức dậy và vệ sinh cá nhân',
         completed: false
     },
     {
         id: '2',
         title: 'Ăn sáng',
-        time: '06:3030',
+        time: '06:30',
         icon: 'restaurant',
         description: 'Ăn sáng và uống thuốc',
         completed: false

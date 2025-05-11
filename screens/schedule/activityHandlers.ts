@@ -3,33 +3,23 @@ import { Alert } from 'react-native';
 import { Activity } from './types';
 import { DEFAULT_ACTIVITIES } from './constants';
 
+const STORAGE_KEY = '@schedule_activities';
+
 export const loadActivities = async (): Promise<Activity[]> => {
     try {
-        const savedActivities = await AsyncStorage.getItem('activities');
-        if (savedActivities) {
-            const parsedActivities = JSON.parse(savedActivities);
-            if (Array.isArray(parsedActivities)) {
-                return parsedActivities;
-            }
-            throw new Error('Định dạng dữ liệu hoạt động không hợp lệ');
-        }
-        await AsyncStorage.setItem('activities', JSON.stringify(DEFAULT_ACTIVITIES));
-        return DEFAULT_ACTIVITIES;
+        const activitiesJson = await AsyncStorage.getItem(STORAGE_KEY);
+        return activitiesJson ? JSON.parse(activitiesJson) : [];
     } catch (error) {
-        console.error('Lỗi khi tải hoạt động:', error);
-        throw error;
+        console.error('Error loading activities:', error);
+        return [];
     }
 };
 
 export const saveActivities = async (activities: Activity[]): Promise<void> => {
     try {
-        if (!Array.isArray(activities)) {
-            throw new Error('Dữ liệu hoạt động không hợp lệ');
-        }
-        await AsyncStorage.setItem('activities', JSON.stringify(activities));
+        await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(activities));
     } catch (error) {
-        console.error('Lỗi khi lưu hoạt động:', error);
-        throw error;
+        console.error('Error saving activities:', error);
     }
 };
 
@@ -100,7 +90,7 @@ export const deleteActivity = async (
 
 export const resetActivities = async (): Promise<Activity[]> => {
     try {
-        await AsyncStorage.setItem('activities', JSON.stringify(DEFAULT_ACTIVITIES));
+        await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_ACTIVITIES));
         return DEFAULT_ACTIVITIES;
     } catch (error) {
         console.error('Lỗi khi đặt lại hoạt động:', error);
@@ -108,12 +98,20 @@ export const resetActivities = async (): Promise<Activity[]> => {
     }
 };
 
+export const clearAllActivities = async () => {
+    try {
+        await AsyncStorage.removeItem(STORAGE_KEY);
+    } catch (error) {
+        console.error('Error clearing activities:', error);
+    }
+};
+
 export const handleLoadActivities = async (
     setActivities: (activities: Activity[]) => void
 ): Promise<void> => {
     try {
-        const loadedActivities = await loadActivities();
-        setActivities(loadedActivities);
+        const activities = await loadActivities();
+        setActivities(activities);
     } catch (error) {
         Alert.alert(
             'Lỗi',
