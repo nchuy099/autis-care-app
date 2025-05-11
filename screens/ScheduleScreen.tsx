@@ -24,35 +24,35 @@ const ICONS: IconName[] = [
 const DEFAULT_ACTIVITIES: Activity[] = [
     {
         id: "1",
-        title: "Wake Up",
+        title: "Thức dậy",
         time: "06:00",
         icon: "sunny",
         completed: false,
     },
     {
         id: "2",
-        title: "Breakfast",
+        title: "Ăn sáng",
         time: "06:30",
         icon: "restaurant",
         completed: false,
     },
     {
         id: "3",
-        title: "Lunch",
+        title: "Ăn trưa",
         time: "12:00",
         icon: "restaurant",
         completed: false,
     },
     {
         id: "4",
-        title: "Dinner",
+        title: "Ăn tối",
         time: "19:00",
         icon: "restaurant",
         completed: false,
     },
     {
         id: "5",
-        title: "Go to Bed",
+        title: "Đi ngủ",
         time: "22:00",
         icon: "bed",
         completed: false,
@@ -73,7 +73,7 @@ const ScheduleScreen = () => {
         hour12: false
     });
     
-    const dateString = today.toLocaleDateString('en-US', {
+    const dateString = today.toLocaleDateString('vi-VN', {
         weekday: 'long',
         month: 'short',
         day: 'numeric',
@@ -90,12 +90,12 @@ const ScheduleScreen = () => {
     const [expandedHour, setExpandedHour] = useState<string | null>(null);
     const [activities, setActivities] = useState<Activity[]>(DEFAULT_ACTIVITIES);
 
-    // Load activities from storage when component mounts
+    // Load activities from storage
     useEffect(() => {
         loadActivities();
     }, []);
 
-    // Save activities whenever they change
+    // Save activities 
     useEffect(() => {
         saveActivities();
     }, [activities]);
@@ -108,7 +108,7 @@ const ScheduleScreen = () => {
                 if (Array.isArray(parsedActivities)) {
                     setActivities(parsedActivities);
                 } else {
-                    throw new Error('Invalid activities data format');
+                    throw new Error('Định dạng dữ liệu hoạt động không hợp lệ');
                 }
             } else {
                 // Set default activities if none are saved
@@ -116,25 +116,25 @@ const ScheduleScreen = () => {
                 await AsyncStorage.setItem('activities', JSON.stringify(DEFAULT_ACTIVITIES));
             }
         } catch (error) {
-            console.error('Error loading activities:', error);
+            console.error('Lỗi khi tải hoạt động:', error);
             Alert.alert(
-                'Error',
-                'Failed to load activities. Would you like to reset to default activities?',
+                'Lỗi',
+                'Không thể tải hoạt động. Bạn có muốn đặt lại về mặc định không?',
                 [
                     {
-                        text: 'Reset',
+                        text: 'Đặt lại',
                         onPress: async () => {
                             try {
                                 setActivities(DEFAULT_ACTIVITIES);
                                 await AsyncStorage.setItem('activities', JSON.stringify(DEFAULT_ACTIVITIES));
                             } catch (resetError) {
-                                console.error('Error resetting activities:', resetError);
-                                Alert.alert('Error', 'Failed to reset activities');
+                                console.error('Lỗi khi đặt lại hoạt động:', resetError);
+                                Alert.alert('Lỗi', 'Không thể đặt lại hoạt động');
                             }
                         }
                     },
                     {
-                        text: 'Cancel',
+                        text: 'Hủy',
                         style: 'cancel'
                     }
                 ]
@@ -145,21 +145,21 @@ const ScheduleScreen = () => {
     const saveActivities = async () => {
         try {
             if (!Array.isArray(activities)) {
-                throw new Error('Invalid activities data');
+                throw new Error('Dữ liệu hoạt động không hợp lệ');
             }
             await AsyncStorage.setItem('activities', JSON.stringify(activities));
         } catch (error) {
-            console.error('Error saving activities:', error);
+            console.error('Lỗi khi lưu hoạt động:', error);
             Alert.alert(
-                'Error',
-                'Failed to save activities. Would you like to try again?',
+                'Lỗi',
+                'Không thể lưu hoạt động. Bạn có muốn thử lại không?',
                 [
                     {
-                        text: 'Retry',
+                        text: 'Thử lại',
                         onPress: () => saveActivities()
                     },
                     {
-                        text: 'Cancel',
+                        text: 'Hủy',
                         style: 'cancel'
                     }
                 ]
@@ -187,15 +187,15 @@ const ScheduleScreen = () => {
             setSelectedHour("08");
             setSelectedMinute("00");
         } catch (error) {
-            console.error('Error in handleAddActivity:', error);
-            Alert.alert('Error', 'Failed to open add activity modal');
+            console.error('Lỗi trong handleAddActivity:', error);
+            Alert.alert('Lỗi', 'Không thể mở modal thêm hoạt động');
         }
     };
 
     const handleEditActivity = (activity: Activity) => {
         try {
             if (!activity) {
-                Alert.alert('Error', 'Invalid activity selected');
+                Alert.alert('Lỗi', 'Hoạt động được chọn không hợp lệ');
                 return;
             }
             setEditingActivity(activity);
@@ -206,30 +206,30 @@ const ScheduleScreen = () => {
             setSelectedMinute(minutes);
             setIsModalVisible(true);
         } catch (error) {
-            console.error('Error in handleEditActivity:', error);
-            Alert.alert('Error', 'Failed to edit activity');
+            console.error('Lỗi trong handleEditActivity:', error);
+            Alert.alert('Lỗi', 'Không thể chỉnh sửa hoạt động');
         }
     };
 
     const handleDeleteActivity = async (id: string) => {
         try {
             if (!id) {
-                Alert.alert('Error', 'Invalid activity ID');
+                Alert.alert('Lỗi', 'ID hoạt động không hợp lệ');
                 return;
             }
             const updatedActivities = activities.filter(activity => activity.id !== id);
             setActivities(updatedActivities);
             await saveActivities();
         } catch (error) {
-            console.error('Error in handleDeleteActivity:', error);
-            Alert.alert('Error', 'Failed to delete activity');
+            console.error('Lỗi trong handleDeleteActivity:', error);
+            Alert.alert('Lỗi', 'Không thể xóa hoạt động');
         }
     };
 
     const handleSaveActivity = async () => {
         try {
             if (!newTitle.trim()) {
-                Alert.alert('Error', 'Please enter an activity title');
+                Alert.alert('Lỗi', 'Vui lòng nhập tên hoạt động');
                 return;
             }
 
@@ -239,8 +239,8 @@ const ScheduleScreen = () => {
             const existingActivity = activities.find(activity => activity.time === timeString);
             if (existingActivity && (!editingActivity || existingActivity.id !== editingActivity.id)) {
                 Alert.alert(
-                    "Time Slot Occupied",
-                    "There is already an activity scheduled at this time. Please choose a different time.",
+                    "Thời gian đã được sử dụng",
+                    "Đã có hoạt động được lên lịch vào thời gian này. Vui lòng chọn thời gian khác.",
                     [
                         { 
                             text: "OK",
@@ -280,8 +280,8 @@ const ScheduleScreen = () => {
             await saveActivities();
             setIsModalVisible(false);
         } catch (error) {
-            console.error('Error in handleSaveActivity:', error);
-            Alert.alert('Error', 'Failed to save activity');
+            console.error('Lỗi trong handleSaveActivity:', error);
+            Alert.alert('Lỗi', 'Không thể lưu hoạt động');
         }
     };
 
@@ -327,6 +327,31 @@ const ScheduleScreen = () => {
         }, 500);
     }, []);
 
+    const handleResetActivities = async () => {
+        try {
+            Alert.alert(
+                'Đặt lại hoạt động',
+                'Bạn có chắc chắn muốn đặt lại tất cả hoạt động về mặc định?',
+                [
+                    {
+                        text: 'Hủy',
+                        style: 'cancel'
+                    },
+                    {
+                        text: 'Đặt lại',
+                        onPress: async () => {
+                            setActivities(DEFAULT_ACTIVITIES);
+                            await AsyncStorage.setItem('activities', JSON.stringify(DEFAULT_ACTIVITIES));
+                        }
+                    }
+                ]
+            );
+        } catch (error) {
+            console.error('Lỗi khi đặt lại hoạt động:', error);
+            Alert.alert('Lỗi', 'Không thể đặt lại hoạt động');
+        }
+    };
+
     return (
         <Layout>
             <View className="flex-1">
@@ -339,13 +364,19 @@ const ScheduleScreen = () => {
                         >
                             <Ionicons name="home" size={24} color="#1e1b4b" />
                         </TouchableOpacity>
-                        <Text className="text-3xl font-bold">Schedule</Text>
+                        <Text className="text-3xl font-bold">Lịch trình</Text>
                         <View className="flex-row">
                             <TouchableOpacity 
                                 onPress={scrollToCurrentTime}
                                 className="w-12 h-12 bg-white rounded-full items-center justify-center shadow-md mr-2"
                             >
                                 <Ionicons name="time" size={24} color="#1e1b4b" />
+                            </TouchableOpacity>
+                            <TouchableOpacity 
+                                onPress={handleResetActivities}
+                                className="w-12 h-12 bg-white rounded-full items-center justify-center shadow-md mr-2"
+                            >
+                                <Ionicons name="refresh" size={24} color="#1e1b4b" />
                             </TouchableOpacity>
                             <TouchableOpacity 
                                 onPress={handleAddActivity}
@@ -355,7 +386,7 @@ const ScheduleScreen = () => {
                             </TouchableOpacity>
                         </View>
                     </View>
-                    <Text className="text-xl text-indigo-700">Today is {dateString}</Text>
+                    <Text className="text-xl text-indigo-700">Hôm nay là {dateString}</Text>
                 </View>
 
                 {/* Vertical Timeline */}
@@ -510,7 +541,7 @@ const ScheduleScreen = () => {
                         <View className="bg-white rounded-t-3xl p-6 shadow-xl">
                             <View className="flex-row justify-between items-center mb-6">
                                 <Text className="text-2xl font-bold">
-                                    {editingActivity ? 'Edit Activity' : 'New Activity'}
+                                    {editingActivity ? 'Chỉnh sửa hoạt động' : 'Hoạt động mới'}
                                 </Text>
                                 <TouchableOpacity 
                                     onPress={() => setIsModalVisible(false)}
@@ -523,7 +554,7 @@ const ScheduleScreen = () => {
                             <TextInput
                                 value={newTitle}
                                 onChangeText={setNewTitle}
-                                placeholder="Activity Title"
+                                placeholder="Tên hoạt động"
                                 className="border border-gray-300 rounded-xl p-4 mb-4 text-lg"
                             />
 
@@ -532,7 +563,7 @@ const ScheduleScreen = () => {
                                 className="border border-gray-300 rounded-xl p-4 mb-4"
                             >
                                 <Text className="text-lg">
-                                    Time: {selectedHour}:{selectedMinute}
+                                    Thời gian: {selectedHour}:{selectedMinute}
                                 </Text>
                             </TouchableOpacity>
 
@@ -540,7 +571,7 @@ const ScheduleScreen = () => {
                                 <View className="mb-4 p-4 bg-gray-50 rounded-xl">
                                     <View className="flex-row justify-between mb-4">
                                         <View className="flex-1 mr-2">
-                                            <Text className="text-sm text-gray-600 mb-2">Hour</Text>
+                                            <Text className="text-sm text-gray-600 mb-2">Giờ</Text>
                                             <ScrollView className="border border-gray-200 rounded-lg p-2 max-h-32">
                                                 {HOURS.map(hour => (
                                                     <TouchableOpacity
@@ -556,7 +587,7 @@ const ScheduleScreen = () => {
                                             </ScrollView>
                                         </View>
                                         <View className="flex-1 ml-2">
-                                            <Text className="text-sm text-gray-600 mb-2">Minute</Text>
+                                            <Text className="text-sm text-gray-600 mb-2">Phút</Text>
                                             <ScrollView className="border border-gray-200 rounded-lg p-2 max-h-32">
                                                 {MINUTES.map(minute => (
                                                     <TouchableOpacity
@@ -575,7 +606,7 @@ const ScheduleScreen = () => {
                                 </View>
                             )}
 
-                            <Text className="text-lg mb-2">Select Icon:</Text>
+                            <Text className="text-lg mb-2">Chọn biểu tượng:</Text>
                             <ScrollView 
                                 horizontal 
                                 showsHorizontalScrollIndicator={false}
@@ -607,14 +638,14 @@ const ScheduleScreen = () => {
                                         }}
                                         className="bg-red-500 rounded-xl py-4 px-6"
                                     >
-                                        <Text className="text-white font-bold text-lg">Delete</Text>
+                                        <Text className="text-white font-bold text-lg">Xóa</Text>
                                     </TouchableOpacity>
                                 )}
                                 <TouchableOpacity
                                     onPress={handleSaveActivity}
                                     className={`bg-indigo-500 rounded-xl py-4 ${editingActivity ? 'px-6' : 'flex-1'}`}
                                 >
-                                    <Text className="text-white font-bold text-lg text-center">Save</Text>
+                                    <Text className="text-white font-bold text-lg text-center">Lưu</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
