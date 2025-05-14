@@ -82,6 +82,13 @@ const MatchingGameScreen = () => {
     // Hàm phát nhạc nền
     const playBackgroundMusic = async () => {
         try {
+            // Kiểm tra và dừng âm thanh nền cũ nếu có
+            if (backgroundMusic) {
+                await backgroundMusic.stopAsync();
+                await backgroundMusic.unloadAsync();
+                setBackgroundMusic(null);
+            }
+
             const { sound } = await Audio.Sound.createAsync(
                 require('assets/GameAssets/sounds/background_music2.mp3'),
                 { isLooping: true }
@@ -108,9 +115,6 @@ const MatchingGameScreen = () => {
     };
 
     const initializeGame = () => {
-        // Dừng nhạc nền cũ nếu có
-        stopBackgroundMusic();
-        
         // Chọn ngẫu nhiên 6 nhóm thẻ
         const shuffledGroups = [...cardGroups].sort(() => Math.random() - 0.5).slice(0, 6);
         
@@ -163,8 +167,10 @@ const MatchingGameScreen = () => {
 
             // Check if game is completed
             if (updatedCards.every(c => c.isMatched)) {
+                playSound(require('assets/GameAssets/sounds/success.mp3'));
                 setIsCompleted(true);
                 setIsActive(false);
+                stopBackgroundMusic(); // Stop background music when game is completed
             }
         } else {
             // Not matched
@@ -176,24 +182,11 @@ const MatchingGameScreen = () => {
         }
     };
 
-    useEffect(() => {
-        initializeGame();
-        return () => {
-            stopBackgroundMusic();
-        };
-    }, []);
-
     // Sử dụng useFocusEffect để kiểm soát nhạc nền
     useFocusEffect(
         React.useCallback(() => {
-            let isActive = true;
-            
-            if (isActive) {
-                playBackgroundMusic();
-            }
-            
+            playBackgroundMusic();
             return () => {
-                isActive = false;
                 stopBackgroundMusic();
             };
         }, [])
@@ -206,6 +199,13 @@ const MatchingGameScreen = () => {
         });
         return unsubscribe;
     }, [navigation]);
+
+    useEffect(() => {
+        initializeGame();
+        return () => {
+            stopBackgroundMusic();
+        };
+    }, []);
 
     return (
         <ImageBackground 

@@ -49,6 +49,13 @@ const PuzzleGameScreen = () => {
     // Hàm phát nhạc nền
     const playBackgroundMusic = async () => {
         try {
+            // Kiểm tra và dừng âm thanh nền cũ nếu có
+            if (backgroundMusic) {
+                await backgroundMusic.stopAsync();
+                await backgroundMusic.unloadAsync();
+                setBackgroundMusic(null);
+            }
+
             const { sound } = await Audio.Sound.createAsync(
                 require('assets/GameAssets/sounds/background_music2.mp3'),
                 { isLooping: true }
@@ -75,9 +82,6 @@ const PuzzleGameScreen = () => {
     };
 
     const initializePuzzle = () => {
-        // Dừng nhạc nền cũ nếu có
-        stopBackgroundMusic();
-
         // Chọn ngẫu nhiên 1 trong 2 hình puzzle
         const randomImage = puzzleImages[Math.floor(Math.random() * puzzleImages.length)];
         const pieces: PuzzlePieceType[] = [];
@@ -125,7 +129,6 @@ const PuzzleGameScreen = () => {
             isCompleted: false,
             moves: 0
         });
-
     };
 
     const isAdjacent = (position1: number, position2: number) => {
@@ -166,6 +169,11 @@ const PuzzleGameScreen = () => {
                 isCompleted,
                 moves: puzzleState.moves + 1
             });
+
+            if (isCompleted) {
+                playSound(require('assets/GameAssets/sounds/success.mp3'));
+                stopBackgroundMusic(); // Stop background music when game is completed
+            }
         }
     };
 
@@ -185,14 +193,8 @@ const PuzzleGameScreen = () => {
     // Sử dụng useFocusEffect để kiểm soát nhạc nền
     useFocusEffect(
         React.useCallback(() => {
-            let isActive = true;
-            
-            if (isActive) {
-                playBackgroundMusic();
-            }
-            
+            playBackgroundMusic();
             return () => {
-                isActive = false;
                 stopBackgroundMusic();
             };
         }, [])
