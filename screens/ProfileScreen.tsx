@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, SafeAreaView } from 'react-native';
 import { useAuth } from '../contexts/AuthContext';
 import { signOut } from '../services/authService';
 import { getUserProfile, updateUserPreferences } from '../services/userService';
@@ -28,9 +28,9 @@ const ProfileScreen = () => {
     };
 
     return (
-        <View className="flex-1 bg-white">
+        <SafeAreaView className="flex-1 bg-white">
             {/* Header */}
-            <View className="flex-row items-center justify-between p-4 border-b border-[#eee]">
+            <View className="flex-row items-center justify-between p-4 border-b border-[#eee] mt-5">
                 <TouchableOpacity onPress={handleBack} className="w-10 h-10 items-center justify-center">
                     <Icon name="arrow-left" size={24} color="#000" />
                 </TouchableOpacity>
@@ -55,7 +55,7 @@ const ProfileScreen = () => {
                     </View>
                     <View className="flex-row items-center py-3 border-b border-[#eee]">
                         <Icon name="account" size={24} color="#666" />
-                        <Text className="text-base ml-4">Role: {profile?.role || 'Admin'}</Text>
+                        <Text className="text-base ml-4">Role: {profile?.preferences?.role || 'Admin'}</Text>
                     </View>
                 </View>
 
@@ -67,7 +67,7 @@ const ProfileScreen = () => {
                     <Text className="text-white text-base font-bold ml-2">Logout</Text>
                 </TouchableOpacity>
             </View>
-        </View>
+        </SafeAreaView>
     );
 };
 
