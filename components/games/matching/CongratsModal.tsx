@@ -26,7 +26,7 @@ const CongratsModal = ({ onPlayAgain, completionTime, moves }: CongratsModalProp
             <View className="bg-white rounded-3xl py-8 px-12 w-[85%] items-center relative">
                 {/* Light rays icon */}
                 <Image 
-                    source={require('assets/GameAssets/light_icon.png')}
+                    source={require('assets/GameAssets/GameComponent/light_icon.png')}
                     className="w-40 h-40 absolute -top-16"
                     resizeMode="contain"
                 />
@@ -34,7 +34,7 @@ const CongratsModal = ({ onPlayAgain, completionTime, moves }: CongratsModalProp
                 {/* Ribbon with text */}
                 <View className="absolute -top-6">
                     <Image 
-                        source={require('assets/GameAssets/finish_ribbon.png')}
+                        source={require('assets/GameAssets/GameComponent/finish_ribbon.png')}
                         className="w-72 h-20"
                         resizeMode="contain"
                     />
@@ -82,7 +82,7 @@ const CongratsModal = ({ onPlayAgain, completionTime, moves }: CongratsModalProp
                         className="items-center justify-center mx-2"
                     >
                         <Image 
-                            source={require('assets/GameAssets/replay_btn.png')}
+                            source={require('assets/GameAssets/GameComponent/replay_btn.png')}
                             className="item-center justify-center"
                             resizeMode="contain"
                         />
@@ -92,7 +92,7 @@ const CongratsModal = ({ onPlayAgain, completionTime, moves }: CongratsModalProp
                         className="items-center justify-center mx-2"
                     >
                         <Image 
-                            source={require('assets/GameAssets/home_btn.png')}
+                            source={require('assets/GameAssets/GameComponent/home_btn.png')}
                             className="item-center justify-center"
                             resizeMode="contain"
                         />

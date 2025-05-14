@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, SafeAreaView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/RootStackParamList';
@@ -11,9 +11,9 @@ const HomeScreen = () => {
     const navigation = useNavigation<HomeScreenNavigationProp>();
 
     return (
-        <View className="flex-1 bg-[#F5F9FF]">
+        <SafeAreaView className="flex-1 bg-[#F5F9FF]">
             {/* Header */}
-            <View className="flex-row justify-between items-center p-5 bg-white border-b border-[#E0E0E0]">
+            <View className="flex-row justify-between items-center p-5 bg-white border-b border-[#E0E0E0] mt-3">
                 <Text className="text-2xl font-bold text-[#333]">AAC Speech Device</Text>
                 <TouchableOpacity 
                     className="p-2.5"
@@ -62,7 +62,7 @@ const HomeScreen = () => {
                     </TouchableOpacity>
                 </View>
             </View>
-        </View>
+        </SafeAreaView>
     );
 };
 

@@ -5,9 +5,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native';
 
 import HomeScreen from 'screens/HomeScreen';
-import ScheduleScreen from 'screens/ScheduleScreen';
+import ScheduleScreen from 'screens/schedule/ScheduleScreen';
 import TalkScreen from 'screens/talk/TalkScreen';
-import WelcomeScreen from 'screens/WelcomeScreen';
 import GameMenuScreen from 'screens/games/GameMenuScreen';
 import MatchingGameScreen from 'screens/games/MatchingGameScreen';
 import { RootStackParamList } from './types/RootStackParamList';
