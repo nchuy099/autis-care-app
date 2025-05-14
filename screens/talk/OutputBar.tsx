@@ -8,7 +8,7 @@ const OutputBar = ({ selectedWords, onSpeak, onRemoveLast, onRemoveAll }: Output
             {selectedWords.length > 0 ? (
                 <View className="flex-row items-center h-full">
                     <TouchableOpacity
-                        className="flex-1 bg-white mx-2 my-2 rounded-xl border-2 border-blue-300"
+                        className="flex-1 justify-between bg-white mx-2 my-2 rounded-xl border-2 border-blue-300"
                         style={{
                             shadowColor: "#000",
                             shadowOffset: { width: 0, height: 2 },
@@ -21,7 +21,7 @@ const OutputBar = ({ selectedWords, onSpeak, onRemoveLast, onRemoveAll }: Output
                         <FlatList
                             data={selectedWords}
                             renderItem={({ item }) => (
-                                <View className="items-center mx-2 justify-center">
+                                <View className="items-center justify-center">
                                     {item.image && (
                                         <Image
                                             source={item.image}
@@ -39,7 +39,7 @@ const OutputBar = ({ selectedWords, onSpeak, onRemoveLast, onRemoveAll }: Output
                             contentContainerStyle={{ alignItems: 'center', height: '100%' }}
                         />
                     </TouchableOpacity>
-                    <View className="flex-col mr-4 gap-3">
+                    <View className="flex-col gap-3">
                         <TouchableOpacity
                             className="bg-orange-400 px-3 py-2 rounded-xl flex-row items-center justify-end gap-1 border-2 border-orange-500"
                             style={{
@@ -69,7 +69,7 @@ const OutputBar = ({ selectedWords, onSpeak, onRemoveLast, onRemoveAll }: Output
                     </View>
                 </View>
             ) : (
-                <View className="flex-1 items-center justify-center bg-white mx-4 my-4 rounded-xl border-2 border-blue-300"
+                <View className="flex-1 items-center justify-center bg-white mx-2 my-2 rounded-xl border-2 border-blue-300"
                     style={{
                         shadowColor: "#000",
                         shadowOffset: { width: 0, height: 2 },

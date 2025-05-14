@@ -1,4 +1,5 @@
 export type RootStackParamList = {
+    WelcomeScreen: undefined;
     HomeScreen: undefined;
     AACScreen: undefined;
     TalkScreen: undefined;
@@ -8,8 +9,6 @@ export type RootStackParamList = {
     MatchingGameScreen: undefined;
     MemoryGameScreen: undefined;
     PuzzleGameScreen: undefined;
-    LoginScreen: undefined;
-    RegisterScreen: undefined;
     ProfileScreen: undefined;
 };
 

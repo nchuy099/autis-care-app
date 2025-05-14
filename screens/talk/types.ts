@@ -1,13 +1,11 @@
 export interface CardItem {
     id: string;
     label: string;
-    type: 'core' | 'back' | 'pronouns_words' | 'attributes' | 'transportation' | 'places' |
-    'people' | 'objects' | 'miscellaneous' | 'household' | 'food' | 'entertainment' |
-    'emotions' | 'directions' | 'colors' | 'clothing' | 'animals' | 'body_health' | 'activities' | 'school_supplies';
-    image?: any;
+    type: 'yes' | 'no' | 'core' | 'back' | 'activities' | 'emotion' | 'health' | 'others'
     isCategory?: boolean;
     subWords?: CardItem[];
     color?: string;
+    image?: any;
 }
 
 export interface OutputBarProps {
