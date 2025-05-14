@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity, Text } from "react-native";
 import * as Speech from 'expo-speech';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
@@ -47,13 +47,16 @@ const TalkScreen = () => {
     return (
         <Layout>
             <View className="flex-1 bg-white p-3">
-                <TouchableOpacity
-                    onPress={() => navigation.navigate('HomeScreen')}
-                    className="absolute top-2 left-2 z-10 p-2 rounded-full bg-gray-100"
-                >
-                    <Ionicons name="home-outline" size={30} color="#333" />
-                </TouchableOpacity>
-                <View className="pt-12">
+                <View className="flex-row items-center justify-between">
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate('HomeScreen')}
+                        className="ml-2 p-2 rounded-full bg-gray-100"
+                    >
+                        <Ionicons name="home-outline" size={30} color="#333" />
+                    </TouchableOpacity>
+                    <Text className="text-2xl font-bold text-center flex-1 mr-10">Chế độ nói</Text>
+                </View>
+                <View className="pt-1">
                     <OutputBar
                         selectedWords={selectedWords}
                         onSpeak={handleSpeak}

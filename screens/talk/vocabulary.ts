@@ -221,8 +221,8 @@ export const vocabularyData: CardItem[] = [
     // Core words
     { id: '1', label: 'Có', type: 'yes', color: getColorByType('yes'), image: yesIcon },
     { id: '2', label: 'Không', type: 'no', color: getColorByType('no'), image: noIcon },
-    { id: '3', label: 'Tôi', type: 'core', color: getColorByType('core'), image: iIcon },
-    { id: '4', label: 'Bạn', type: 'core', color: getColorByType('core'), image: youIcon },
+    { id: '3', label: 'Con', type: 'core', color: getColorByType('core'), image: iIcon },
+    { id: '4', label: 'Muốn', type: 'core', color: getColorByType('core'), image: youIcon },
     { id: '5', label: 'Ba', type: 'core', color: getColorByType('core'), image: dadIcon },
     { id: '6', label: 'Mẹ', type: 'core', color: getColorByType('core'), image: momIcon },
     // { id: '7', label: 'Xin chào', type: 'core', color: getColorByType('core'), image: helloIcon },
