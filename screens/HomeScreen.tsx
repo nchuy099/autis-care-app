@@ -15,10 +15,10 @@ const HomeScreen = () => {
             {/* Header */}
             <View className="flex-row justify-center items-center p-3 bg-white border-b border-[#E0E0E0] mt-7">
                 <Image
-                    source={require('../assets/GameAssets/GameComponent/puzzle_game_logo.png')}
-                    style={{ width: 40, height: 40, marginRight: 10 }}
+                    source={require('../assets/app_logo.jpg')}
+                    style={{ width: 60, height: 50, marginRight: 10, marginTop: 12 }}
                 />
-                <Text className="text-2xl font-bold text-[#333]">Autis Care App</Text>
+                <Text className="text-2xl font-bold text-[#333] mt-3">Autis Care App</Text>
             </View>
 
             {/* Main Content */}

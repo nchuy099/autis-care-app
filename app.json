@@ -4,7 +4,7 @@
     "slug": "my-expo-app",
     "version": "1.0.0",
     "web": {
-      "favicon": "./assets/GameAssets/GameComponent/puzzle_game_logo.png",
+      "favicon": "./assets/app_logo.jpg",
       "bundler": "metro"
     },
     "experiments": {
@@ -12,10 +12,10 @@
     },
     "plugins": [],
     "orientation": "default",
-    "icon": "./assets/GameAssets/GameComponent/puzzle_game_logo.png",
+    "icon": "./assets/app_logo.jpg",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/GameAssets/GameComponent/puzzle_game_logo.png",
+      "image": "./assets/app_logo.jpg",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -27,7 +27,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/GameAssets/GameComponent/puzzle_game_logo.png",
+        "foregroundImage": "./assets/app_logo.jpg",
         "backgroundColor": "#ffffff"
       }
     }
